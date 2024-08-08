@@ -13,23 +13,24 @@ import {
   TambahMahasiswa,
   EditMahasiswa,
   Admin,
-  Display
+  Display,
 } from "./pages";
 
 import { action as registerAction } from "./pages/Register";
 import { action as loginAction } from "./pages/Login";
 
 import { action as deleteMahasiswaAction } from "./pages/DeleteMahasiswa";
-import { action as addMahasiswaAction } from "./pages/TambahMahasiswa";
-import { action as editMahasiswaAction } from "./pages/EditMahasiswa";
+import { action as addMahasiswaAction } from "./pages/mahasiswa/TambahMahasiswa";
+import { action as editMahasiswaAction } from "./pages/mahasiswa/EditMahasiswa";
 // import { action as registeredMahasiswaAction } from "./pages/Scan";
 
 import { loader as berandaLoader } from "./pages/Beranda";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
-import { loader as allMahasiswaLoader } from "./pages/Mahasiswa";
-import { loader as editMahasiswa } from "./pages/EditMahasiswa";
+import { loader as allMahasiswaLoader } from "./pages/mahasiswa/Mahasiswa";
+import { loader as editMahasiswa } from "./pages/mahasiswa/EditMahasiswa";
 import { loader as adminLoader } from "./pages/Admin";
 
+import { loader as allOrangtuaLoader } from "./pages/orangtua/OrangTua";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") === "true";
@@ -105,7 +106,28 @@ const router = createBrowserRouter([
           },
           {
             path: "orangtua",
-            element: <OrangTua />,
+            children: [
+              {
+                index: true,
+                element: <OrangTua />,
+                loader: allOrangtuaLoader,
+              },
+              {
+                path: "tambah-orangtua",
+                element: <OrangTua />,
+                // action: addOrangTuaAction,
+              },
+              {
+                path: "edit-orangtua/:id",
+                element: <OrangTua />,
+                // loader: editOrangTua,
+                // action: editOrangTuaAction,
+              },
+              {
+                path: "registered",
+                element: <OrangTua />,
+              },
+            ],
           },
           {
             path: "scan",

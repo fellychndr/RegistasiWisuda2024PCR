@@ -60,13 +60,15 @@ export const getAllOrangtua = async (req, res) => {
         },
         width: 250,
     };
-
+    
+    
     try {
         const orangtuas = await Orangtua.find(queryObject)
-            .sort(sortKey)
-            .skip(skip)
-            .limit(limit);
-
+        .sort(sortKey)
+        .skip(skip)
+        .limit(limit);
+        
+        console.log(orangtuas);
         const orangtuasWithNumber = orangtuas.map((orangtua, index) => ({
             ...orangtua.toObject(),
             number: skip + index + 1
@@ -84,7 +86,7 @@ export const getAllOrangtua = async (req, res) => {
         const totalOrangtuas = await Orangtua.countDocuments(queryObject);
         const numOfPages = Math.ceil(totalOrangtuas / limit);
 
-        res.status(StatusCodes.OK).json({ totalOrangtuas, numOfPages, currentPage: page, orangtua: orangtuasWithQRCodes, qrcode: mahasiswasWithQRCodes })
+        res.status(StatusCodes.OK).json({ totalOrangtuas, numOfPages, currentPage: page, orangtua: orangtuasWithQRCodes, qrcode: orangtuasWithQRCodes })
 
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
@@ -107,6 +109,26 @@ export const getOrangtua = async (req, res) => {
         const orangtua = await Orangtua.findOne({ _id: id })
         res.status(StatusCodes.OK).json({ orangtua })
     } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+}
 
+export const updateOrangtua = async (req, res) => {
+    try {
+        req.body.updatedBy = req.user.userId;
+        const updatedOrangtua = await Orangtua.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(StatusCodes.OK).json({ msg: 'Orangtua modified', orangtua: updatedOrangtua });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+}
+
+export const deleteOrangtua = async (req, res) => {
+    try {
+        const { id } = req.params
+        const orangtua = await Orangtua.findByIdAndDelete(id)
+        res.status(StatusCodes.OK).json({ msg: 'Orangtua deleted', orangtua })
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 }

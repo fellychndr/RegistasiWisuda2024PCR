@@ -2,11 +2,10 @@ import { FormRow, FormRowSelect } from ".";
 import Wrapper from "../assets/wrappers/DashboardFormPage";
 import { Form, useSubmit } from "react-router-dom";
 import { JURUSAN, PRODI, SORT_BY } from "../../../utils/constants";
-import { useAllMahasiswaContext } from "../pages/Mahasiswa";
-const SearchContainer = () => {
-  const { searchValues } = useAllMahasiswaContext();
+
+const SearchContainer = ({ context, formTitle }) => {
+  const { searchValues = {} } = context || {};
   const { search, jurusan, prodi, sort, isRegis = false } = searchValues;
-  // console.log(searchValues);
 
   const submit = useSubmit();
 
@@ -24,11 +23,12 @@ const SearchContainer = () => {
   return (
     <Wrapper>
       <Form className="form">
-        <h6 className="form-title">Cari Mahasiswa</h6>
+        <h6 className="form-title">{formTitle}</h6>
         <div className="form-center">
           {/* search position */}
 
-          <FormRow style={{display: "none"}}
+          <FormRow
+            style={{ display: "none" }}
             type="hidden"
             name="isRegis"
             sembunyi={true}

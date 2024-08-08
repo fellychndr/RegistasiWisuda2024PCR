@@ -24,7 +24,7 @@ export const action = async ({ request }) => {
     return redirect("/dashboard");
   } catch (error) {
     errors.msg = error?.response?.data?.msg;
-    toast.success( errors.msg);
+    toast.success(errors.msg);
     return errors;
   }
 };
@@ -51,12 +51,12 @@ const Login = () => {
   return (
     <Wrapper>
       <Form method="post" className="form">
-        <Logo />
+        <Logo width={250}/>
         <h4>Login</h4>
-        <FormRow type="email" name="email" labelText={"Email"}/>
-        <FormRow type="password" name="password" labelText={"Password"}/>
+        <FormRow type="email" name="email" labelText={"Email"} />
+        <FormRow type="password" name="password" labelText={"Password"} />
         <SubmitBtn formBtn />
-        <button type="button" className="btn btn-block" onClick={loginDemoUser}>
+        {/* <button type="button" className="btn btn-block" onClick={loginDemoUser}>
           explore the app
         </button>
         <p>
@@ -64,7 +64,7 @@ const Login = () => {
           <Link to="/register" className="member-btn">
             Register
           </Link>
-        </p>
+        </p> */}
       </Form>
     </Wrapper>
   );

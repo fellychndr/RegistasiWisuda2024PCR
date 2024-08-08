@@ -8,9 +8,9 @@ export { default as Error } from './Error';
 export { default as Stats } from './Stats';
 export { default as Admin } from './Admin';
 
-export { default as Mahasiswa } from './Mahasiswa';
-export { default as TambahMahasiswa } from './TambahMahasiswa';
-export { default as EditMahasiswa } from './EditMahasiswa';
-export { default as OrangTua } from './OrangTua';
+export { default as Mahasiswa } from './mahasiswa/Mahasiswa';
+export { default as TambahMahasiswa } from './mahasiswa/TambahMahasiswa';
+export { default as EditMahasiswa } from './mahasiswa/EditMahasiswa';
+export { default as OrangTua } from './orangtua/OrangTua';
 export { default as Scan } from './Scan';
 export { default as Display } from './Display';

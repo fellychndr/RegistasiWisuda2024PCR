@@ -5,6 +5,9 @@ import qrcode from 'qrcode';
 export const getAllMahasiswas = async (req, res) => {
     const { search, jurusan, prodi, isRegis, sort } = req.query;
 
+    console.log(req.query);
+    
+
     let queryObject = {
         isRegis: false,
         isDeleted: false
@@ -84,7 +87,7 @@ export const getAllMahasiswas = async (req, res) => {
         const totalMahasiswas = await Mahasiswa.countDocuments(queryObject);
         const numOfPages = Math.ceil(totalMahasiswas / limit);
 
-        res.status(StatusCodes.OK).json({ totalMahasiswas, numOfPages, currentPage: page, mahasiswas: mahasiswasWithQRCodes, qrcode: mahasiswasWithQRCodes })
+        res.status(StatusCodes.OK).json({ total : totalMahasiswas, numOfPages, currentPage: page, data: mahasiswasWithQRCodes, qrcode: mahasiswasWithQRCodes })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
@@ -112,9 +115,7 @@ export const getMahasiswa = async (req, res) => {
 export const updateMahasiswa = async (req, res) => {
     try {
         req.body.updatedBy = req.user.userId;
-        const updatedMahasiswa = await Mahasiswa.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
+        const updatedMahasiswa = await Mahasiswa.findByIdAndUpdate(req.params.id, req.body, { new: true, });
         res.status(StatusCodes.OK).json({ msg: 'Mahasiswa modified', mahasiswa: updatedMahasiswa });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
@@ -143,8 +144,8 @@ export const updateMahasiswaRegister = async (req, res) => {
 
 export const deleteMahasiswa = async (req, res) => {
     try {
-        const removedMahasiswa = await Mahasiswa.findByIdAndUpdate(req.params.id, { isDeleted: true, deletedBy: req.user.userId });
-        res.status(StatusCodes.OK).json({ msg: 'Mahasiswa deleted', mahasiswa: removedMahasiswa });
+        const mahasiswa = await Mahasiswa.findByIdAndUpdate(req.params.id, { isDeleted: true, deletedBy: req.user.userId });
+        res.status(StatusCodes.OK).json({ msg: 'Mahasiswa deleted', mahasiswa: mahasiswa });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }

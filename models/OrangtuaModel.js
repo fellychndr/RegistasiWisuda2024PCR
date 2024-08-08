@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { JURUSAN, PRODI } from '../utils/constants.js';
 
-const MahasiswaSchema = new mongoose.Schema(
+const OrangtuaSchema = new mongoose.Schema(
     {
         nim: {
             type: String,
@@ -62,4 +62,4 @@ const MahasiswaSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default mongoose.model('Mahasiswa', MahasiswaSchema);
+export default mongoose.model('Orangtua', OrangtuaSchema);

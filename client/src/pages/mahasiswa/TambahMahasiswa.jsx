@@ -1,10 +1,10 @@
-import { FormRow, FormRowSelect, SubmitBtn } from "../components";
-import Wrapper from "../assets/wrappers/DashboardFormPage";
+import { FormRow, FormRowSelect, SubmitBtn } from "../../components";
+import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useOutletContext } from "react-router-dom";
-import { JURUSAN, PRODI } from "../../../utils/constants";
+import { JURUSAN, PRODI } from "../../../../utils/constants";
 import { Form } from "react-router-dom";
 import { toast } from "react-toastify";
-import customFetch from "../utils/customFetch";
+import customFetch from "../../utils/customFetch";
 
 export const action = async ({ request }) => {
   const formData = await request.formData();

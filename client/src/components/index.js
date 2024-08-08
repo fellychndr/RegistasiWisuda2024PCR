@@ -15,7 +15,7 @@ export { default as PageBtnContainer } from './PageBtnContainer.jsx'
 
 
 export { default as BerandaContainer } from './BerandaContainer.jsx'
-export { default as TableMahasiswa } from './TableMahasiswa.jsx'
+export { default as Table } from './Table.jsx'
 export { default as Tab } from './Tab.jsx'
 export { default as LabelButton } from './LabelButton.jsx'
 export { default as Confirm } from './Confirm.jsx'

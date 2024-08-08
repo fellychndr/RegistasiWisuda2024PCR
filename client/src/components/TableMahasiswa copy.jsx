@@ -1,5 +1,5 @@
 import DataTable from "react-data-table-component";
-import { useAllMahasiswaContext } from "../pages/Mahasiswa";
+import { useAllMahasiswaContext } from "../pages/mahasiswa/Mahasiswa";
 import { useLocation, useNavigate } from "react-router-dom";
 import TabelContainer from "../assets/wrappers/Tabel";
 import { useDashboardContext } from "../pages/DashboardLayout";
@@ -64,9 +64,9 @@ const TableMahasiswa = () => {
     },
     {
       name: "QR",
-      cell: (row) => <img src={row.qr_code} width={50} height={50}/>,
+      cell: (row) => <img src={row.qr_code} width={50} height={50} />,
       sortable: true,
-      width : "5.5rem"
+      width: "5.5rem",
     },
     {
       name: "Status",
