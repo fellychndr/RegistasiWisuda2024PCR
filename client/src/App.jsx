@@ -12,6 +12,7 @@ import {
   OrangTua,
   TambahMahasiswa,
   EditMahasiswa,
+  TambahOrangtua,
   Admin,
   Display,
 } from "./pages";
@@ -23,6 +24,9 @@ import { action as deleteMahasiswaAction } from "./pages/DeleteMahasiswa";
 import { action as addMahasiswaAction } from "./pages/mahasiswa/TambahMahasiswa";
 import { action as editMahasiswaAction } from "./pages/mahasiswa/EditMahasiswa";
 // import { action as registeredMahasiswaAction } from "./pages/Scan";
+
+
+import { action as addOrangTuaAction } from "./pages/orangtua/TambahOrangtua";
 
 import { loader as berandaLoader } from "./pages/Beranda";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
@@ -114,8 +118,8 @@ const router = createBrowserRouter([
               },
               {
                 path: "tambah-orangtua",
-                element: <OrangTua />,
-                // action: addOrangTuaAction,
+                element: <TambahOrangtua />,
+                action: addOrangTuaAction,
               },
               {
                 path: "edit-orangtua/:id",

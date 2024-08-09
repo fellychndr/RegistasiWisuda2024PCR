@@ -20,7 +20,7 @@ const SmallSidebar = () => {
             <FaTimes />
           </button>
           <header>
-            <Logo />
+            <Logo  width={200}/>
           </header>
           <NavLinks />
         </div>

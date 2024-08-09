@@ -400,6 +400,7 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
 }
 
 /* Bagian QR SAJA */
@@ -461,4 +462,8 @@ button:disabled {
 .Result-header {
   font-size: 16pt;
   margin-bottom: 20px;
+}
+
+.reset-btn {
+  
 }

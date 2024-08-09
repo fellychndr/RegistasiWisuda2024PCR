@@ -1,13 +1,15 @@
 import { FormRow, FormRowSelect } from ".";
 import Wrapper from "../assets/wrappers/DashboardFormPage";
-import { Form, useSubmit } from "react-router-dom";
+import { Form, useSubmit, useNavigate } from "react-router-dom";
 import { JURUSAN, PRODI, SORT_BY } from "../../../utils/constants";
+import { useRef } from "react";
+import { GrPowerReset } from "react-icons/gr";
 
 const SearchContainer = ({ context, formTitle }) => {
-  const { searchValues = {} } = context || {};
-  const { search, jurusan, prodi, sort, isRegis = false } = searchValues;
-
+  const { search, jurusan, prodi, sort, isRegis = false } = context;
+  const formRef = useRef(null);
   const submit = useSubmit();
+  const navigate = useNavigate();
 
   const debounce = (onChange) => {
     let timeout;
@@ -20,13 +22,19 @@ const SearchContainer = ({ context, formTitle }) => {
     };
   };
 
+  const resetForm = () => {
+    if (formRef.current) {
+      formRef.current.reset(); // Reset the form fields
+      // Optionally navigate to the base URL or current URL to refresh search results
+      navigate(window.location.pathname);
+    }
+  };
+
   return (
     <Wrapper>
-      <Form className="form">
+      <Form className="form" ref={formRef}>
         <h6 className="form-title">{formTitle}</h6>
         <div className="form-center">
-          {/* search position */}
-
           <FormRow
             style={{ display: "none" }}
             type="hidden"
@@ -72,13 +80,16 @@ const SearchContainer = ({ context, formTitle }) => {
               submit(e.currentTarget.form);
             }}
           />
-          {/* <Link
-          to="/dashboard/mahasiswa"
-          className="btn form-btn delete-btn"
-          style={{ width: "100%" }}
-        >
-          Reset Search Values
-        </Link> */}
+          <div className="form-row">
+            <br /> <br />
+            <button
+              type="button"
+              onClick={resetForm}
+              className="btn reset-btn "
+            >
+              <GrPowerReset size={15} />
+            </button>
+          </div>
         </div>
       </Form>
     </Wrapper>

@@ -3,10 +3,10 @@ import styled from 'styled-components';
 const Wrapper = styled.section`
   border-radius: var(--border-radius);
   width: 100%;
-  /* background: #fff; */
-  padding: 0.5rem 0.5rem;
+  background: var(--background-secondary-color);
+  padding: 2rem 2rem 1rem;
   .form-title {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
   .form {
     margin: 0;
@@ -22,7 +22,6 @@ const Wrapper = styled.section`
   .form-center {
     display: grid;
     row-gap: 0.5rem;
-    padding : 0.5rem;
   }
   .form-btn {
     align-self: end;
@@ -39,8 +38,7 @@ const Wrapper = styled.section`
   }
   @media (min-width: 1120px) {
     .form-center {
-      
-      grid-template-columns: 1fr 1fr 1fr 1fr 0.1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
     }
   }
 `;

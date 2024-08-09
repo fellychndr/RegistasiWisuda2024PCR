@@ -25,13 +25,15 @@ export const loader = async ({ request }) => {
 
 const OrangTua = () => {
   const { data, searchValues } = useLoaderData();
+console.log(data);
 
   return (
     <AllOrangtuasContext.Provider value={{ data, searchValues }}>
       {/* <Tab /> */}
       <TabelContainer>
-        <LabelButton />
-        <SearchContainer />
+        <LabelButton title={"Orang Tua"} linkUrl={"../orangtua/tambah-orangtua"}/>
+        <SearchContainer context={searchValues}
+          formTitle="Cari Orang Tua"/>
         <Table titleTable={"Seluruh Orang Tua"} context={data}/>
       </TabelContainer>
     </AllOrangtuasContext.Provider>

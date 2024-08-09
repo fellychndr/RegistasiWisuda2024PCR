@@ -35,12 +35,12 @@ const Mahasiswa = () => {
     <AllMahasiswasContext.Provider value={{ data, searchValues }}>
       {/* <Tab /> */}
       <TabelContainer>
-        <LabelButton />
-        <SearchContainer
-          context={useAllMahasiswaContext()}
+        <LabelButton title={"Mahasiswa" } linkUrl={"../mahasiswa/tambah-mahasiswa"}/>
+         <SearchContainer
+          context={searchValues}
           formTitle="Cari Mahasiswa"
         />
-        <Table titleTable={"Seluruh Mahasiswa"} context={data}/>
+       <Table titleTable={"Seluruh Mahasiswa"} context={data}/>
       </TabelContainer>
     </AllMahasiswasContext.Provider>
   );

@@ -16,13 +16,13 @@ const OrangtuaSchema = new mongoose.Schema(
         },
         jurusan: {
             type: String,
-            enum: Object.values(JURUSAN),
-            default: JURUSAN.JTI,
+            // enum: Object.values(JURUSAN),
+            // default: JURUSAN.JTI,
         },
         prodi: {
             type: String,
-            enum: Object.values(PRODI),
-            default: PRODI.D4_TEKNIK_INFORMATIKA,
+            // enum: Object.values(PRODI),
+            // default: PRODI.D4_TEKNIK_INFORMATIKA,
         },
         ipk: {
             type: String,

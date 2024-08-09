@@ -1,6 +1,7 @@
 import { FaPlus } from "react-icons/fa";
-import { LuImport } from "react-icons/lu";
+// import { LuImport } from "react-icons/lu";
 import { FaCheck } from "react-icons/fa6";
+import { IoArrowBackOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -8,44 +9,42 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0rem 1rem 1rem;
+  padding: 1rem 0.5rem 1rem;
   border-radius: 5px;
 `;
 
-const LabelButton = () => {
+const LabelButton = ({ title, linkUrl }) => {
   const { search, pathname } = useLocation();
+  console.log(search);
+
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(search);
+  const isRegis = searchParams.get("isRegis") === "true";
 
-  const handleTabClick = (pathName) => {
-    // console.log(pathName);
-    searchParams.set("isRegis", pathName);
-    navigate(`${pathname}?${searchParams.toString()}`); // Perbarui URL dengan parameter yang sesuai
+  const handleTabClick = () => {
+    searchParams.set("isRegis", isRegis ? "false" : "true");
+    navigate(`${pathname}?${searchParams.toString()}`);
   };
 
   return (
     <Container>
-      <h5>Tabel Mahasiswa</h5>
-      <div className="sejajar" >
-        <button
-          className="btn sejajar"
-          onClick={() => handleTabClick("true")} // Ubah argumen yang diteruskan ke handleTabClick sesuai kebutuhan
-        >
-          <FaCheck size={15} style={{ marginRight: "0.3rem" }} />
-          Lihat Registrasi Mahasiswa
+      <h5>Tabel {title}</h5>
+      <div className="sejajar">
+        <button className="btn sejajar" onClick={() => handleTabClick()}>
+          {isRegis ? <IoArrowBackOutline /> : <FaCheck size={15} />}
+          {isRegis ? "Kembali" : `Lihat Registrasi ${title}`}
         </button>
         {/* <button className="btn sejajar" style={{ margin: "0rem 1rem 0rem" }}>
-          <LuImport size={15} style={{ marginRight: "0.3rem" }} />
+          <LuImport size={15} />
           Import Data Mahasiswa
         </button> */}
         <button
           type="button"
           className="btn sejajar"
-          onClick={() => navigate("../mahasiswa/tambah-mahasiswa")}
-          style={{ margin: "0rem 1rem 0rem" }}
+          onClick={() => navigate(linkUrl)}
         >
-          <FaPlus size={13} style={{ marginRight: "0.3rem" }} />
-          Tambah Mahasiswa
+          <FaPlus size={13} />
+          Tambah {title}
         </button>
       </div>
     </Container>

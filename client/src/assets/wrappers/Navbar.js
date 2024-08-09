@@ -37,7 +37,7 @@ const Wrapper = styled.nav`
     position: sticky;
     top: 0;
     .nav-center {
-      width: 90%;
+      width: 97%;
     }
     .logo {
       display: none;

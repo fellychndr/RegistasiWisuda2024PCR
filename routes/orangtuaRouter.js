@@ -1,4 +1,6 @@
 import { Router } from 'express'
+
+
 const router = Router();
 
 import {
@@ -8,8 +10,10 @@ import {
     updateOrangtua,
     // updateOrangtuaRegister,
     deleteOrangtua,
+    importDataOrtu,
     // showStats
 } from '../controllers/orangtuaController.js';
+import upload from '../middleware/multerMiddleware.js';
 // import { validateJobInput, validateIdParam } from '../middleware/validationMiddleware.js';
 // import { checkForTestUser } from '../middleware/authMiddleware.js';
 
@@ -17,7 +21,7 @@ import {
 router.route('/').get(getAllOrangtua);
 // router.route('/').get(getAllOrangtua).post(createOrangtua);
 // router.route('/stats').get(showStats);
-
+router.route('/import').post(upload.single('file'), importDataOrtu);
 router.route('/:id')
     .get(getOrangtua)
     .patch(updateOrangtua)

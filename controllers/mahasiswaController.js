@@ -1,12 +1,11 @@
 import { StatusCodes } from 'http-status-codes';
 import Mahasiswa from '../models/MahasiswaModel.js';
 import qrcode from 'qrcode';
+import path from 'path';
+import XLSX from 'xlsx';
 
 export const getAllMahasiswas = async (req, res) => {
     const { search, jurusan, prodi, isRegis, sort } = req.query;
-
-    console.log(req.query);
-    
 
     let queryObject = {
         isRegis: false,
@@ -87,7 +86,7 @@ export const getAllMahasiswas = async (req, res) => {
         const totalMahasiswas = await Mahasiswa.countDocuments(queryObject);
         const numOfPages = Math.ceil(totalMahasiswas / limit);
 
-        res.status(StatusCodes.OK).json({ total : totalMahasiswas, numOfPages, currentPage: page, data: mahasiswasWithQRCodes, qrcode: mahasiswasWithQRCodes })
+        res.status(StatusCodes.OK).json({ total: totalMahasiswas, numOfPages, currentPage: page, data: mahasiswasWithQRCodes, qrcode: mahasiswasWithQRCodes })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
@@ -192,6 +191,52 @@ export const showStats = async (req, res) => {
         };
 
         res.status(StatusCodes.OK).json({ defaultStats });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};
+
+
+export const importDataMhs = async (req, res) => {
+    try {
+
+        const filePath = path.join(process.cwd(), req.file.path);
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        for (const item of data) {
+            const inputSeatNumber = item.No_kursi;
+            let formattedSeatNumber;
+            if (inputSeatNumber && inputSeatNumber.includes('.')) {
+                const [letterPart, numberPart] = inputSeatNumber.split('.');
+                const formattedNumberPart = String(numberPart).padStart(3, '0');
+                formattedSeatNumber = letterPart + '.' + formattedNumberPart;
+            } else {
+                console.error('Nomor kursi tidak valid.');
+                continue; // Lewati item ini jika nomor kursi tidak valid
+            }
+
+            const mahasiswa = new mahasiswaModel({
+                nim: item.NIM,
+                name: item.Nama,
+                nik: item.NIK,
+                noIjazah: item.Nomor_Ijazah,
+                prodi: item.Program_Studi,
+                jurusan: item.Jurusan,
+                ipk: item.IPK,
+                noKursi: formattedSeatNumber
+            });
+
+            try {
+                await mahasiswa.save();
+                console.log(`Data mahasiswa ${mahasiswa.name} berhasil disimpan.`);
+            } catch (error) {
+                console.error(`Gagal menyimpan data mahasiswa: ${error.message}`);
+            }
+        }
+
+        res.status(StatusCodes.OK).json({ data: "Berhasil mengimport data" });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }

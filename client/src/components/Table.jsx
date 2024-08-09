@@ -15,6 +15,8 @@ const Table = ({ titleTable, context }) => {
   const navigate = useNavigate();
 
   const { data, total } = context;
+  // console.log(data);
+  
 
   const columns = getMahasiswaColumns(navigate);
 

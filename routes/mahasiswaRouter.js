@@ -8,22 +8,26 @@ import {
     updateMahasiswa,
     updateMahasiswaRegister,
     deleteMahasiswa,
+    importDataMhs,
     showStats
 } from '../controllers/mahasiswaController.js';
+import upload from '../middleware/multerMiddleware.js';
 // import { validateJobInput, validateIdParam } from '../middleware/validationMiddleware.js';
 // import { checkForTestUser } from '../middleware/authMiddleware.js';
 
 
 router.route('/').get(getAllMahasiswas).post(createMahasiswa);
 router.route('/stats').get(showStats);
+router.route('/import').post(upload.single('file'), importDataMhs);
 
 router.route('/:id')
     .get(getMahasiswa)
     .patch(updateMahasiswa)
     .delete(deleteMahasiswa);
 
-    router.route('/sudah/:id')
+router.route('/sudah/:id')
     .get(getMahasiswa)
     .patch(updateMahasiswaRegister);
+
 
 export default router;

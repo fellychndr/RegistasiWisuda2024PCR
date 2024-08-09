@@ -1,6 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import Orangtua from '../models/OrangtuaModel.js'
 import qrcode from 'qrcode';
+import OrangtuaModel from "../models/OrangtuaModel.js";
+import path from 'path';
+import XLSX from 'xlsx';
 
 
 export const getAllOrangtua = async (req, res) => {
@@ -60,14 +63,14 @@ export const getAllOrangtua = async (req, res) => {
         },
         width: 250,
     };
-    
-    
+
+
     try {
         const orangtuas = await Orangtua.find(queryObject)
-        .sort(sortKey)
-        .skip(skip)
-        .limit(limit);
-        
+            .sort(sortKey)
+            .skip(skip)
+            .limit(limit);
+
         console.log(orangtuas);
         const orangtuasWithNumber = orangtuas.map((orangtua, index) => ({
             ...orangtua.toObject(),
@@ -86,7 +89,7 @@ export const getAllOrangtua = async (req, res) => {
         const totalOrangtuas = await Orangtua.countDocuments(queryObject);
         const numOfPages = Math.ceil(totalOrangtuas / limit);
 
-        res.status(StatusCodes.OK).json({ totalOrangtuas, numOfPages, currentPage: page, orangtua: orangtuasWithQRCodes, qrcode: orangtuasWithQRCodes })
+        res.status(StatusCodes.OK).json({ total: totalOrangtuas, numOfPages, currentPage: page, data: orangtuasWithQRCodes, qrcode: orangtuasWithQRCodes })
 
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
@@ -132,3 +135,59 @@ export const deleteOrangtua = async (req, res) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 }
+
+
+export const importDataOrtu = async (req, res) => {
+    try {
+
+        const filePath = path.join(process.cwd(), req.file.path);
+        const workbook = XLSX.readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        // data.forEach(async (item) => {
+        //     const orangtua = new OrangtuaModel({ nim: item.NIM, name: item.Nama, prodi: item.Program_Studi, noKursi: item.No_Kursi }); // Pastikan model Anda cocok
+        //     try {
+        //         await orangtua.save();
+        //         console.log(`Data orangtua ${orangtua.name} berhasil disimpan.`);
+        //     } catch (error) {
+        //         console.error(`Gagal menyimpan data orangtua: ${error.message}`);
+        //     }
+        // });
+
+        for (const item of data) {
+            const inputSeatNumber = item.No_kursi;
+            let formattedSeatNumber;
+            if (inputSeatNumber && inputSeatNumber.includes('.')) {
+                const [letterPart, numberPart] = inputSeatNumber.split('.');
+                const formattedNumberPart = String(numberPart).padStart(3, '0');
+                formattedSeatNumber = letterPart + '.' + formattedNumberPart;
+            } else {
+                console.error('Nomor kursi tidak valid.');
+                continue; // Lewati item ini jika nomor kursi tidak valid
+            }
+
+            const orangtua = new OrangtuaModel({
+                nim: item.NIM,
+                name: item.Nama,
+                nik: item.NIK,
+                noIjazah: item.Nomor_Ijazah,
+                prodi: item.Program_Studi,
+                jurusan: item.Jurusan,
+                ipk: item.IPK,
+                noKursi: formattedSeatNumber
+            });
+
+            try {
+                await orangtua.save();
+                console.log(`Data orangtua ${orangtua.name} berhasil disimpan.`);
+            } catch (error) {
+                console.error(`Gagal menyimpan data orangtua: ${error.message}`);
+            }
+        }
+
+        res.status(StatusCodes.OK).json({ data: "Berhasil mengimport data" });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};

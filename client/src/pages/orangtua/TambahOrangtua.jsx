@@ -9,8 +9,8 @@ export const action = async ({ request }) => {
   const data = Object.fromEntries(formData);
   try {
     // console.log(data);
-    await customFetch.post("/mahasiswa", data);
-    toast.success("Mahasiswa berhasil ditambahkan!");
+    await customFetch.post("/orangtua", data);
+    toast.success("Orangtua berhasil ditambahkan!");
     return redirect("../");
   } catch (error) {
     toast.error(error?.response?.data?.msg);
@@ -18,13 +18,13 @@ export const action = async ({ request }) => {
   }
 };
 
-const TambahMahasiswa = () => {
+const TambahOrangtua = () => {
   const { user } = useOutletContext();
   // console.log(user);
   return (
     <Wrapper>
-      <FormTambahEdit title="Tambah Mahasiswa" mahasiswa={""}/>
+      <FormTambahEdit title="Tambah Orangtua" mahasiswa={""}/>
     </Wrapper>
   );
 };
-export default TambahMahasiswa;
+export default TambahOrangtua;

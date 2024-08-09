@@ -11,6 +11,8 @@ export { default as Admin } from './Admin';
 export { default as Mahasiswa } from './mahasiswa/Mahasiswa';
 export { default as TambahMahasiswa } from './mahasiswa/TambahMahasiswa';
 export { default as EditMahasiswa } from './mahasiswa/EditMahasiswa';
+
 export { default as OrangTua } from './orangtua/OrangTua';
+export { default as TambahOrangtua } from './orangtua/TambahOrangtua';
 export { default as Scan } from './Scan';
 export { default as Display } from './Display';
