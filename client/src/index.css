@@ -109,7 +109,7 @@ h6 {
   letter-spacing: var(--letter-spacing);
 }
 
-h2{
+h1{
   font-family: 'Playwrite ID', cursive;
   margin: 0;
   font-weight: 400;
@@ -120,7 +120,7 @@ h2{
 
 
 h1 {
-  font-size: clamp(2rem, 5vw, 5rem); /* Large heading */
+  font-size: clamp(1.5rem, 3vw, 3rem); /* Large heading */
 }
 
 h2 {

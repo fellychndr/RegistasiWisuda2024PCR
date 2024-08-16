@@ -1,13 +1,13 @@
 import {
-  Link,
   Form,
+  Link,
   redirect,
   useActionData,
   useNavigate,
 } from "react-router-dom";
-import Wrapper from "../assets/wrappers/RegisterAndLoginPage";
-import { FormRow, Logo, SubmitBtn } from "../components";
-import customFetch from "../utils/customFetch";
+import Wrapper from "../../assets/wrappers/RegisterAndLoginPage";
+import { FormRow, Logo, SubmitBtn } from "../../components";
+import customFetch from "../../utils/customFetch";
 import { toast } from "react-toastify";
 
 export const action = async ({ request }) => {
@@ -24,7 +24,7 @@ export const action = async ({ request }) => {
     return redirect("/dashboard");
   } catch (error) {
     errors.msg = error?.response?.data?.msg;
-    toast.success(errors.msg);
+    toast.error(errors.msg);
     return errors;
   }
 };
@@ -51,7 +51,7 @@ const Login = () => {
   return (
     <Wrapper>
       <Form method="post" className="form">
-        <Logo width={250}/>
+        <Logo width={250} />
         <h4>Login</h4>
         <FormRow type="email" name="email" labelText={"Email"} />
         <FormRow type="password" name="password" labelText={"Password"} />
@@ -65,6 +65,11 @@ const Login = () => {
             Register
           </Link>
         </p> */}
+        <p>
+          <Link to="/request-reset-password" className="member-btn">
+            Lupa Password?
+          </Link>
+        </p>
       </Form>
     </Wrapper>
   );

@@ -23,7 +23,11 @@ const TambahMahasiswa = () => {
   // console.log(user);
   return (
     <Wrapper>
-      <FormTambahEdit title="Tambah Mahasiswa" mahasiswa={""}/>
+      <FormTambahEdit
+        title="Data Mahasiswa"
+        mahasiswa={""}
+        urlLink={"/orangtua/import"}
+      />
     </Wrapper>
   );
 };

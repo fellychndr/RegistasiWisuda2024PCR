@@ -1,7 +1,7 @@
 import { Form, redirect, Link } from "react-router-dom";
-import Wrapper from "../assets/wrappers/RegisterAndLoginPage";
-import { FormRow, Logo, SubmitBtn } from "../components";
-import customFetch from "../utils/customFetch";
+import Wrapper from "../../assets/wrappers/RegisterAndLoginPage";
+import { FormRow, Logo, SubmitBtn } from "../../components";
+import customFetch from "../../utils/customFetch";
 import { toast } from "react-toastify";
 
 export const action = async ({ request }) => {
@@ -24,7 +24,7 @@ const Register = () => {
         <Logo />
         <h4>Register</h4>
         <FormRow type="text" name={"name"} labelText={"Nama"}/>
-        <FormRow type="text" name={"lastName"} labelText={"Last Name"} />
+        <FormRow type="text" name={"username"} labelText={"Username"} />
         <FormRow type="email" name={"email"} labelText={"Email"}/>
         <FormRow type="password" name={"password"} labelText={"Password"}/>
 

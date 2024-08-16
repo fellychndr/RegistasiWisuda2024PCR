@@ -51,6 +51,15 @@ export const validateIdParam = withValidationErrors([
 
 export const validateRegisterInput = withValidationErrors([
     body('name').notEmpty().withMessage('name is required'),
+    body('username')
+        .notEmpty()
+        .withMessage('Username is required')
+        .custom(async (username) => {
+            const user = await User.findOne({ username });
+            if (user) {
+                throw new BadRequestError('username already exists');
+            }
+        }),
     body('email')
         .notEmpty()
         .withMessage('email is required')
@@ -67,8 +76,6 @@ export const validateRegisterInput = withValidationErrors([
         .withMessage('password is required')
         .isLength({ min: 8 })
         .withMessage('password must be at least 8 characters long'),
-    body('location').notEmpty().withMessage('location is required'),
-    body('lastName').notEmpty().withMessage('last name is required'),
 ]);
 
 

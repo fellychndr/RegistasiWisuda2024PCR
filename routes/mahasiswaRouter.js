@@ -9,6 +9,7 @@ import {
     updateMahasiswaRegister,
     deleteMahasiswa,
     importDataMhs,
+    exportPdfDataMhs,
     showStats
 } from '../controllers/mahasiswaController.js';
 import upload from '../middleware/multerMiddleware.js';
@@ -18,6 +19,7 @@ import upload from '../middleware/multerMiddleware.js';
 
 router.route('/').get(getAllMahasiswas).post(createMahasiswa);
 router.route('/stats').get(showStats);
+router.route('/export').get(exportPdfDataMhs);
 router.route('/import').post(upload.single('file'), importDataMhs);
 
 router.route('/:id')

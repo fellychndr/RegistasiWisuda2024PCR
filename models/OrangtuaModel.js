@@ -3,29 +3,13 @@ import { JURUSAN, PRODI } from '../utils/constants.js';
 
 const OrangtuaSchema = new mongoose.Schema(
     {
-        nim: {
-            type: String,
-            unique: true,
-        },
         name: {
             type: String,
-        },
-        noIjazah: {
-            type: String,
-            unique: true,
-        },
-        jurusan: {
-            type: String,
-            // enum: Object.values(JURUSAN),
-            // default: JURUSAN.JTI,
         },
         prodi: {
             type: String,
             // enum: Object.values(PRODI),
             // default: PRODI.D4_TEKNIK_INFORMATIKA,
-        },
-        ipk: {
-            type: String,
         },
         noKursi: {
             type: String,
@@ -46,6 +30,10 @@ const OrangtuaSchema = new mongoose.Schema(
             type: mongoose.Types.ObjectId,
             ref: 'User',
         },
+        isKonsumsiBy: {
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+        },
         createdBy: {
             type: mongoose.Types.ObjectId,
             ref: 'User',
@@ -59,7 +47,23 @@ const OrangtuaSchema = new mongoose.Schema(
             ref: 'User',
         }
     },
-    { timestamps: true }
+    { timestamps: true },
+    // nim: {
+    //     type: String,
+    //     unique: true,
+    // },
+    // noIjazah: {
+    //     type: String,
+    //     unique: true,
+    // },
+    // jurusan: {
+    //     type: String,
+    //     // enum: Object.values(JURUSAN),
+    //     // default: JURUSAN.JTI,
+    // },
+    // ipk: {
+    //     type: String,
+    // },
 );
 
 export default mongoose.model('Orangtua', OrangtuaSchema);

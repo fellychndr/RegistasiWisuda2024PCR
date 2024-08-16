@@ -11,9 +11,9 @@ const Landing = () => {
       </nav>
       <div className="container page">
         <div className="info">
-          <h2>
+          <h1>
             Congratulation <span>Wisudawan</span> 2024
-          </h2>
+          </h1>
           <p>
             Selamat kepada semua mahasiswa yang telah menyelesaikan perjalanan pendidikan
             dan melangkah ke masa depan dengan diwisuda hari ini. Semoga

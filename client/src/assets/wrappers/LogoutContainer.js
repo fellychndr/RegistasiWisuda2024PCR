@@ -39,6 +39,10 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
   }
+  .dropdown-btn:hover {
+  background: var(--primary-700);
+  box-shadow: var(--shadow-3);
+  }
 `;
 
 export default Wrapper;

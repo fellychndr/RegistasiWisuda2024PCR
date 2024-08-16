@@ -3,6 +3,7 @@
 import { IoCloseCircle } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
 import { Registered, Confirm } from "../components";
+import Konsumsied from "../components/Konsumsied";
 
 export const getMahasiswaColumns = (navigate) => [
   {
@@ -56,14 +57,18 @@ export const getMahasiswaColumns = (navigate) => [
       row.isRegis ? (
         <button
           className="btn regis-btn"
-          onClick={() => Registered(row._id, navigate)}
+          onClick={() =>
+            Registered(`/mahasiswa/sudah/${row._id}`, navigate, "mahasiswa")
+          }
         >
           <FaCheckCircle size={15} />
         </button>
       ) : (
         <div
           className="btn unregis-btn"
-          onClick={() => Registered(row._id, navigate)}
+          onClick={() =>
+            Registered(`/mahasiswa/sudah/${row._id}`, navigate, "mahasiswa")
+          }
         >
           <IoCloseCircle size={17} />
         </div>
@@ -78,6 +83,100 @@ export const getMahasiswaColumns = (navigate) => [
           className="btn warning-btn"
           style={{ marginRight: "10px" }}
           onClick={() => navigate(`../mahasiswa/edit-mahasiswa/${row._id}`)}
+        >
+          Edit
+        </button>
+        <button
+          className="btn danger-btn"
+          onClick={() => Confirm(row._id, navigate)}
+        >
+          Hapus
+        </button>
+      </div>
+    ),
+  },
+];
+
+export const getOrangtuaColumns = (navigate) => [
+  {
+    name: "No.",
+    selector: (row) => row.number,
+    width: "3.4rem",
+  },
+  {
+    name: "Nama",
+    selector: (row) => row.name,
+    sortable: true,
+  },
+  {
+    name: "Prodi",
+    selector: (row) => row.prodi,
+    sortable: true,
+  },
+  {
+    name: "No Kursi",
+    selector: (row) => row.noKursi,
+    sortable: true,
+    width: "5.9rem",
+  },
+  {
+    name: "QR",
+    cell: (row) => <img src={row.qr_code} width={50} height={50} />,
+    sortable: true,
+    width: "5.5rem",
+  },
+  {
+    name: "Registrasi",
+    cell: (row) =>
+      row.isRegis ? (
+        <button
+          className="btn regis-btn"
+          onClick={() =>
+            Registered(`/orangtua/sudah/${row._id}`, navigate, "orangtua")
+          }
+        >
+          <FaCheckCircle size={15} />
+        </button>
+      ) : (
+        <div
+          className="btn unregis-btn"
+          onClick={() =>
+            Registered(`/orangtua/sudah/${row._id}`, navigate, "orangtua")
+          }
+        >
+          <IoCloseCircle size={17} />
+        </div>
+      ),
+    width: "5.5rem",
+  },
+  {
+    name: "Konsumsi",
+    cell: (row) =>
+      row.isKonsumsi ? (
+        <button
+          className="btn regis-btn"
+          onClick={() => Konsumsied(`/orangtua/konsumsi/${row._id}`, navigate,"orangtua")}
+        >
+          <FaCheckCircle size={15} />
+        </button>
+      ) : (
+        <div
+          className="btn unregis-btn"
+          onClick={() => Konsumsied(`/orangtua/konsumsi/${row._id}`, navigate,"orangtua")}
+        >
+          <IoCloseCircle size={17} />
+        </div>
+      ),
+    width: "5.5rem",
+  },
+  {
+    name: "Action",
+    cell: (row) => (
+      <div>
+        <button
+          className="btn warning-btn"
+          style={{ marginRight: "10px" }}
+          onClick={() => navigate(`../orangtua/edit-orangtua/${row._id}`)}
         >
           Edit
         </button>

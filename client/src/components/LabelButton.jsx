@@ -15,7 +15,6 @@ const Container = styled.div`
 
 const LabelButton = ({ title, linkUrl }) => {
   const { search, pathname } = useLocation();
-  console.log(search);
 
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(search);

@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
 
-const registered = async (id , navigate) => {
+const registered = async (linkUrl , navigate, url) => {
   Swal.fire({
     title: "Apakah Kamu Yakin?",
     text: "Mahasiswa Akan di Registrasi.",
@@ -15,8 +15,8 @@ const registered = async (id , navigate) => {
     .then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await customFetch.patch(`/mahasiswa/sudah/${id}`);
-          navigate("/dashboard/mahasiswa");
+          await customFetch.patch(linkUrl);
+          navigate(`/dashboard/${url}`);
         } catch (error) {
           toast.error(error?.response?.data?.msg);
         }

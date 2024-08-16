@@ -8,7 +8,6 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   try {
-    // console.log(data);
     await customFetch.post("/orangtua", data);
     toast.success("Orangtua berhasil ditambahkan!");
     return redirect("../");
@@ -23,7 +22,11 @@ const TambahOrangtua = () => {
   // console.log(user);
   return (
     <Wrapper>
-      <FormTambahEdit title="Tambah Orangtua" mahasiswa={""}/>
+      <FormTambahEdit
+        title="Data Orangtua"
+        mahasiswa={""}
+        urlLink={"/orangtua/import"}
+      />
     </Wrapper>
   );
 };

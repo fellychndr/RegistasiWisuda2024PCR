@@ -3,6 +3,7 @@ import Mahasiswa from '../models/MahasiswaModel.js';
 import qrcode from 'qrcode';
 import path from 'path';
 import XLSX from 'xlsx';
+import PDFDocument from 'pdfkit';
 
 export const getAllMahasiswas = async (req, res) => {
     const { search, jurusan, prodi, isRegis, sort } = req.query;
@@ -121,7 +122,6 @@ export const updateMahasiswa = async (req, res) => {
     }
 };
 
-// update registered mahasiswa "false or true"
 export const updateMahasiswaRegister = async (req, res) => {
     try {
         let isRegis = true;
@@ -196,6 +196,89 @@ export const showStats = async (req, res) => {
     }
 };
 
+export const getExportMhs = async (req, res) => {
+    let queryObject = {
+        isRegis: false,
+        isDeleted: false
+    };
+    //option untuk qr code
+    const opts = {
+        errorCorrectionLevel: "H",
+        type: "image/jpeg",
+        quality: 0.3,
+        margin: 1.2,
+        color: {
+            dark: "#000",
+            light: "#FFFF",
+        },
+        width: 240,
+    };
+
+    try {
+        const mahasiswas = await Mahasiswa.find(queryObject);
+        const mahasiswasWithQRCodes = await Promise.all(mahasiswas.map(async (mahasiswa, index) => {
+            const src = await qrcode.toDataURL(mahasiswa._id.toString(), opts);
+            return {
+                ...mahasiswa.toObject(),
+                number: index + 1,
+                qr_code: src
+            };
+        }));
+
+        const totalMahasiswas = await Mahasiswa.countDocuments(queryObject);
+        return { total: totalMahasiswas, data: mahasiswasWithQRCodes };
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};
+
+export const exportPdfDataMhs = async (req, res) => {
+    try {
+        const { data } = await getExportMhs(req, res);
+
+        const doc = new PDFDocument({ size: 'A4', margin: 50 });
+
+        res.setHeader('Content-Disposition', 'attachment; filename=mahasiswas.pdf');
+        res.setHeader('Content-Type', 'application/pdf');
+
+        doc.pipe(res);
+
+        doc.fontSize(12).text('Data Mahasiswa', { align: 'center' });
+
+        data.forEach((mahasiswa, i) => {
+            // Estimasi tinggi data dan QR code
+            const dataHeight = 100;
+
+            // Cek apakah ruang cukup di halaman saat ini
+            if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
+                doc.addPage();
+            }
+
+            doc.moveDown();
+            doc.fontSize(10)
+                .text(`No: ${mahasiswa.number}`, 50)
+                .text(`NIM: ${mahasiswa.nim}`, 50)
+                .text(`Nama: ${mahasiswa.name}`, 50)
+                .text(`Jurusan: ${mahasiswa.jurusan}`, 50)
+                .text(`Prodi: ${mahasiswa.prodi}`, 50)
+                .text(`No Kursi: ${mahasiswa.noKursi}`, 50)
+                .text(`No Ijazah: ${mahasiswa.noIjazah}`, 50, doc.y)
+
+            // Menambahkan gambar QR code di sebelah kanan data
+            doc.image(mahasiswa.qr_code, doc.page.width - 150, doc.y - 94, {
+                fit: [100, 100],
+                align: 'right',
+                valign: 'center'
+            });
+
+            doc.moveDown(1);
+        });
+
+        doc.end();
+    }  catch (error) {
+        res.status(500).json({ message: 'Error generating PDF', error: error.message });
+    }
+}
 
 export const importDataMhs = async (req, res) => {
     try {

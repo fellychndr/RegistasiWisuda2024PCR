@@ -8,9 +8,11 @@ import {
     getOrangtua,
     createOrangtua,
     updateOrangtua,
-    // updateOrangtuaRegister,
     deleteOrangtua,
     importDataOrtu,
+    exportPdfDataOrtu,
+    updateOrangtuaRegister,
+    updateOrangtuaKonsumsi,
     // showStats
 } from '../controllers/orangtuaController.js';
 import upload from '../middleware/multerMiddleware.js';
@@ -18,17 +20,19 @@ import upload from '../middleware/multerMiddleware.js';
 // import { checkForTestUser } from '../middleware/authMiddleware.js';
 
 
-router.route('/').get(getAllOrangtua);
-// router.route('/').get(getAllOrangtua).post(createOrangtua);
+router.route('/').get(getAllOrangtua).post(createOrangtua);
 // router.route('/stats').get(showStats);
+router.route('/export').get(exportPdfDataOrtu);
 router.route('/import').post(upload.single('file'), importDataOrtu);
 router.route('/:id')
     .get(getOrangtua)
     .patch(updateOrangtua)
     .delete(deleteOrangtua);
 
-    // router.route('/sudah/:id')
-    // .get(getMahasiswa)
-    // .patch(updateMahasiswaRegister);
+router.route('/sudah/:id')
+    .get(getOrangtua)
+    .patch(updateOrangtuaRegister);
+
+router.route('/konsumsi/:id').patch(updateOrangtuaKonsumsi);
 
 export default router;

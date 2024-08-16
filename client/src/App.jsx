@@ -15,18 +15,22 @@ import {
   TambahOrangtua,
   Admin,
   Display,
+  Settings,
+  RequestResetPassword,
+  ResetPassword,
 } from "./pages";
 
-import { action as registerAction } from "./pages/Register";
-import { action as loginAction } from "./pages/Login";
+import { action as registerAction } from "./pages/auth/Register";
+import { action as loginAction } from "./pages/auth/Login";
+import { action as requesetResetPassword } from "./pages/auth/RequestResetPassword";
+import { action as resetPassword } from "./pages/auth/ResetPassword";
 
 import { action as deleteMahasiswaAction } from "./pages/DeleteMahasiswa";
 import { action as addMahasiswaAction } from "./pages/mahasiswa/TambahMahasiswa";
 import { action as editMahasiswaAction } from "./pages/mahasiswa/EditMahasiswa";
-// import { action as registeredMahasiswaAction } from "./pages/Scan";
-
-
+// import { action as registeredMahasiswaAction } from "./pages/auth/Scan";
 import { action as addOrangTuaAction } from "./pages/orangtua/TambahOrangtua";
+import { action as requesetResetPasswordSetting } from "./pages/Settings";
 
 import { loader as berandaLoader } from "./pages/Beranda";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
@@ -142,7 +146,22 @@ const router = createBrowserRouter([
             element: <Admin />,
             loader: adminLoader,
           },
+          {
+            path: "settings",
+            element: <Settings />,
+            action: requesetResetPasswordSetting,
+          },
         ],
+      },
+      {
+        path: "request-reset-password",
+        element: <RequestResetPassword />,
+        action: requesetResetPassword,
+      },
+      {
+        path: "reset/:token",
+        element: <ResetPassword />,
+        action: resetPassword,
       },
     ],
   },

@@ -39,8 +39,8 @@ const Wrapper = styled.section`
   }
   @media (min-width: 992px) {
     .page {
-      grid-template-columns: 1fr 400px;
-      column-gap: 3rem;
+      grid-template-columns: 1fr 50%;
+      column-gap: 1rem;
     }
     .main-img {
       display: block;

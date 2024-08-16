@@ -15,6 +15,7 @@ import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import mahasiswaRouter from './routes/mahasiswaRouter.js';
 import orangtuaRouter from './routes/orangtuaRouter.js';
+import settingRouter from './routes/settingRouter.js';
 
 // public 
 import { dirname } from 'path';
@@ -24,10 +25,14 @@ import path from 'path';
 // middleware
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
+import helmet from 'helmet';
 
 dotenv.config()
 const app = express()
-app.use(cors());
+app.use(
+    cors(),
+    helmet()
+);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -65,6 +70,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/mahasiswa', authenticateUser, mahasiswaRouter);
 app.use('/api/v1/orangtua', authenticateUser, orangtuaRouter);
+app.use('/api/v1/settings', authenticateUser, settingRouter);
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './public', 'index.html'))

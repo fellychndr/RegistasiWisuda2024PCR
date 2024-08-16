@@ -4,6 +4,7 @@ import qrcode from 'qrcode';
 import OrangtuaModel from "../models/OrangtuaModel.js";
 import path from 'path';
 import XLSX from 'xlsx';
+import PDFDocument from 'pdfkit';
 
 
 export const getAllOrangtua = async (req, res) => {
@@ -108,8 +109,7 @@ export const createOrangtua = async (req, res) => {
 
 export const getOrangtua = async (req, res) => {
     try {
-        const { id } = req.params
-        const orangtua = await Orangtua.findOne({ _id: id })
+        const orangtua = await Orangtua.findOne(req.params.id)
         res.status(StatusCodes.OK).json({ orangtua })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
@@ -126,6 +126,41 @@ export const updateOrangtua = async (req, res) => {
     }
 }
 
+export const updateOrangtuaKonsumsi = async (req, res) => {
+    try {
+        let isKonsumsi = true;
+        const konsumsiOrangtua = await Orangtua.findById(req.params.id);
+        if (konsumsiOrangtua.isKonsumsi) {
+            isKonsumsi = false;
+        }
+
+        const updatedOrangtua = await Orangtua.findByIdAndUpdate(req.params.id, { isKonsumsi: isKonsumsi, isKonsumsiBy: req.user.userId }, {
+            new: true,
+        });
+        res.status(StatusCodes.OK).json({ msg: 'Orangtua Konsumsied modified', orangtua: updatedOrangtua });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};
+export const updateOrangtuaRegister = async (req, res) => {
+    try {
+        let isRegis = true;
+        const protocolLength = req.headers.referer.startsWith("https://") ? 8 : 7;
+        const urlAfterProtocol = req.headers.referer.substring(protocolLength);
+
+        if (urlAfterProtocol.includes("isRegis=true")) {
+            isRegis = false;
+        }
+
+        const updatedOrangtua = await Orangtua.findByIdAndUpdate(req.params.id, { isRegis: isRegis, isRegisBy: req.user.userId }, {
+            new: true,
+        });
+        res.status(StatusCodes.OK).json({ msg: 'Orangtua Registered modified', orangtua: updatedOrangtua });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};
+
 export const deleteOrangtua = async (req, res) => {
     try {
         const { id } = req.params
@@ -136,6 +171,84 @@ export const deleteOrangtua = async (req, res) => {
     }
 }
 
+export const getExportOrtu = async (req, res) => {
+    let queryObject = {
+        isRegis: false,
+        isDeleted: false
+    };
+    //option untuk qr code
+    const opts = {
+        errorCorrectionLevel: "H",
+        type: "image/jpeg",
+        quality: 0.3,
+        margin: 1.2,
+        color: {
+            dark: "#000",
+            light: "#FFFF",
+        },
+        width: 240,
+    };
+
+    try {
+        const orangtua = await Orangtua.find(queryObject);
+        const orangtuaWithQRCodes = await Promise.all(orangtua.map(async (orangtua, index) => {
+            const src = await qrcode.toDataURL(orangtua._id.toString(), opts);
+            return {
+                ...orangtua.toObject(),
+                number: index + 1,
+                qr_code: src
+            };
+        }));
+
+        const totalOrangtuas = await Orangtua.countDocuments(queryObject);
+        return { total: totalOrangtuas, data: orangtuaWithQRCodes };
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};
+
+export const exportPdfDataOrtu = async (req, res) => {
+    try {
+        const { data } = await getExportOrtu(req, res);
+
+        const doc = new PDFDocument({ size: 'A4', margin: 50 });
+
+        res.setHeader('Content-Disposition', 'attachment; filename=orangtua.pdf');
+        res.setHeader('Content-Type', 'application/pdf');
+
+        doc.pipe(res);
+
+        doc.fontSize(12).text('Data Orang Tua', { align: 'center' });
+
+        data.forEach((orangtua, i) => {
+            // Estimasi tinggi data dan QR code
+            const dataHeight = 100;
+
+            // Cek apakah ruang cukup di halaman saat ini
+            if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
+                doc.addPage();
+            }
+
+            doc.moveDown();
+            doc.fontSize(10)
+                .text(`No: ${orangtua.number}`, 50)
+                .text(`Nama: ${orangtua.name}`, 50)
+                .text(`Prodi: ${orangtua.prodi}`, 50)
+                .text(`No Kursi: ${orangtua.noKursi}`, 50, doc.y)
+            doc.image(orangtua.qr_code, doc.page.width - 150, doc.y - 54, {
+                fit: [100, 100],
+                align: 'right',
+                valign: 'center'
+            });
+
+            doc.moveDown(4);
+        });
+
+        doc.end();
+    } catch (error) {
+        res.status(500).json({ message: 'Error generating PDF', error: error.message });
+    }
+}
 
 export const importDataOrtu = async (req, res) => {
     try {
@@ -145,46 +258,55 @@ export const importDataOrtu = async (req, res) => {
         const sheetName = workbook.SheetNames[0];
         const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-        // data.forEach(async (item) => {
-        //     const orangtua = new OrangtuaModel({ nim: item.NIM, name: item.Nama, prodi: item.Program_Studi, noKursi: item.No_Kursi }); // Pastikan model Anda cocok
-        //     try {
-        //         await orangtua.save();
-        //         console.log(`Data orangtua ${orangtua.name} berhasil disimpan.`);
-        //     } catch (error) {
-        //         console.error(`Gagal menyimpan data orangtua: ${error.message}`);
-        //     }
-        // });
+        // console.log(data);
+        // return
 
-        for (const item of data) {
-            const inputSeatNumber = item.No_kursi;
-            let formattedSeatNumber;
-            if (inputSeatNumber && inputSeatNumber.includes('.')) {
-                const [letterPart, numberPart] = inputSeatNumber.split('.');
-                const formattedNumberPart = String(numberPart).padStart(3, '0');
-                formattedSeatNumber = letterPart + '.' + formattedNumberPart;
-            } else {
-                console.error('Nomor kursi tidak valid.');
-                continue; // Lewati item ini jika nomor kursi tidak valid
-            }
-
-            const orangtua = new OrangtuaModel({
-                nim: item.NIM,
-                name: item.Nama,
-                nik: item.NIK,
-                noIjazah: item.Nomor_Ijazah,
-                prodi: item.Program_Studi,
-                jurusan: item.Jurusan,
-                ipk: item.IPK,
-                noKursi: formattedSeatNumber
-            });
-
+        data.forEach(async (item) => {
+            const orangtua = new OrangtuaModel(
+                {
+                    name: item.Nama,
+                    prodi: item.Program_Studi,
+                    noKursi: item.No_Kursi
+                }
+            );
             try {
                 await orangtua.save();
                 console.log(`Data orangtua ${orangtua.name} berhasil disimpan.`);
             } catch (error) {
                 console.error(`Gagal menyimpan data orangtua: ${error.message}`);
             }
-        }
+        });
+
+        // for (const item of data) {
+        //     const inputSeatNumber = item.No_kursi;
+        //     let formattedSeatNumber;
+        //     if (inputSeatNumber && inputSeatNumber.includes('.')) {
+        //         const [letterPart, numberPart] = inputSeatNumber.split('.');
+        //         const formattedNumberPart = String(numberPart).padStart(3, '0');
+        //         formattedSeatNumber = letterPart + '.' + formattedNumberPart;
+        //     } else {
+        //         console.error('Nomor kursi tidak valid.');
+        //         continue; // Lewati item ini jika nomor kursi tidak valid
+        //     }
+
+        //     const orangtua = new OrangtuaModel({
+        //         nim: item.NIM,
+        //         name: item.Nama,
+        //         nik: item.NIK,
+        //         noIjazah: item.Nomor_Ijazah,
+        //         prodi: item.Program_Studi,
+        //         jurusan: item.Jurusan,
+        //         ipk: item.IPK,
+        //         noKursi: formattedSeatNumber
+        //     });
+
+        //     try {
+        //         await orangtua.save();
+        //         console.log(`Data orangtua ${orangtua.name} berhasil disimpan.`);
+        //     } catch (error) {
+        //         console.error(`Gagal menyimpan data orangtua: ${error.message}`);
+        //     }
+        // }
 
         res.status(StatusCodes.OK).json({ data: "Berhasil mengimport data" });
     } catch (error) {
