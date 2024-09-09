@@ -4,6 +4,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
 import { Registered, Confirm } from "../components";
 import Konsumsied from "../components/Konsumsied";
+import ToggleButton from "../components/SlideOnOff";
 
 export const getMahasiswaColumns = (navigate) => [
   {
@@ -155,14 +156,18 @@ export const getOrangtuaColumns = (navigate) => [
       row.isKonsumsi ? (
         <button
           className="btn regis-btn"
-          onClick={() => Konsumsied(`/orangtua/konsumsi/${row._id}`, navigate,"orangtua")}
+          onClick={() =>
+            Konsumsied(`/orangtua/konsumsi/${row._id}`, navigate, "orangtua")
+          }
         >
           <FaCheckCircle size={15} />
         </button>
       ) : (
         <div
           className="btn unregis-btn"
-          onClick={() => Konsumsied(`/orangtua/konsumsi/${row._id}`, navigate,"orangtua")}
+          onClick={() =>
+            Konsumsied(`/orangtua/konsumsi/${row._id}`, navigate, "orangtua")
+          }
         >
           <IoCloseCircle size={17} />
         </div>
@@ -186,6 +191,65 @@ export const getOrangtuaColumns = (navigate) => [
         >
           Hapus
         </button>
+      </div>
+    ),
+  },
+];
+
+export const getColumnsSettings = () => [
+  {
+    name: "No",
+    selector: (row) => row.number,
+    sortable: true,
+  },
+  {
+    name: "Nama",
+    selector: (row) => row.name,
+    sortable: true,
+  },
+  {
+    name: "Tersedia",
+    selector: (row) => row.tersedia,
+    sortable: true,
+  },
+  {
+    name: "Action",
+    cell: (row) => (
+      <div>
+        <button
+          className="btn warning-btn"
+          style={{ marginRight: "10px" }}
+          // onClick={() => navigate(`../orangtua/edit-orangtua/${row._id}`)}
+        >
+          Edit
+        </button>
+        <button
+          className="btn danger-btn"
+          // onClick={() => Confirm(row._id, navigate)}
+        >
+          Hapus
+        </button>
+      </div>
+    ),
+  },
+];
+
+export const getColumnsActivationFeatures = () => [
+  {
+    name: "No",
+    selector: (row) => row.number,
+    sortable: true,
+  },
+  {
+    name: "Nama",
+    selector: (row) => row.featureName,
+    sortable: true,
+  },
+  {
+    name: "Action",
+    cell: (row) => (
+      <div>
+        <ToggleButton id={row._id} isEnabled={row.isEnabled} />
       </div>
     ),
   },

@@ -26,7 +26,7 @@ const TambahMahasiswa = () => {
       <FormTambahEdit
         title="Data Mahasiswa"
         mahasiswa={""}
-        urlLink={"/orangtua/import"}
+        urlLink={"/mahasiswa/import"}
       />
     </Wrapper>
   );

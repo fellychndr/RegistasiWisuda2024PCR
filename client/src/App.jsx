@@ -30,7 +30,7 @@ import { action as addMahasiswaAction } from "./pages/mahasiswa/TambahMahasiswa"
 import { action as editMahasiswaAction } from "./pages/mahasiswa/EditMahasiswa";
 // import { action as registeredMahasiswaAction } from "./pages/auth/Scan";
 import { action as addOrangTuaAction } from "./pages/orangtua/TambahOrangtua";
-import { action as requesetResetPasswordSetting } from "./pages/Settings";
+import { action as requesetResetPasswordSetting } from "./pages/settings/Settings";
 
 import { loader as berandaLoader } from "./pages/Beranda";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";

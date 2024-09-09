@@ -35,6 +35,8 @@ const Table = ({ titleTable, context }) => {
     navigate(`${pathname}?${searchParams.toString()}`);
   };
 
+  
+
   const handlePerRowsChange = (limit) => {
     const searchParams = new URLSearchParams(search);
     searchParams.set("limit", limit);

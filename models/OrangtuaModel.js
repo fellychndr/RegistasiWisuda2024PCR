@@ -48,22 +48,6 @@ const OrangtuaSchema = new mongoose.Schema(
         }
     },
     { timestamps: true },
-    // nim: {
-    //     type: String,
-    //     unique: true,
-    // },
-    // noIjazah: {
-    //     type: String,
-    //     unique: true,
-    // },
-    // jurusan: {
-    //     type: String,
-    //     // enum: Object.values(JURUSAN),
-    //     // default: JURUSAN.JTI,
-    // },
-    // ipk: {
-    //     type: String,
-    // },
 );
 
 export default mongoose.model('Orangtua', OrangtuaSchema);

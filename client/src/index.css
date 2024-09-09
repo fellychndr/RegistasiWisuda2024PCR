@@ -1,5 +1,5 @@
 /* ============= GLOBAL CSS =============== */
-@import url('https://fonts.googleapis.com/css2?family=Playwrite+ID:wght@100..400&family=Zeyada&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+ID:wght@100..400&family=Zeyada&display=swap");
 *,
 ::after,
 ::before {
@@ -69,7 +69,7 @@ html {
 
   --dark-mode-bg-color: #202020;
   --dark-mode-text-color: #ffff;
-  --dark-mode-bg-secondary-color: #2D2D2D;
+  --dark-mode-bg-secondary-color: #2d2d2d;
   --dark-mode-text-secondary-color: var(--grey-300);
 
   --background-color: var(--grey-50);
@@ -109,15 +109,14 @@ h6 {
   letter-spacing: var(--letter-spacing);
 }
 
-h1{
-  font-family: 'Playwrite ID', cursive;
+h1 {
+  font-family: "Playwrite ID", cursive;
   margin: 0;
   font-weight: 400;
   line-height: 2;
   text-transform: capitalize;
   letter-spacing: var(--letter-spacing);
 }
-
 
 h1 {
   font-size: clamp(1.5rem, 3vw, 3rem); /* Large heading */
@@ -465,5 +464,45 @@ button:disabled {
 }
 
 .reset-btn {
-  
+}
+
+/* Container for the toggle button */
+.toggle-button {
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Slider inside the toggle button */
+.toggle-button-slider {
+  width: 26px;
+  height: 26px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+/* When toggle is on */
+.toggle-button.on {
+  background-color: #4caf50;
+}
+
+.toggle-button.on .toggle-button-slider {
+  transform: translateX(30px);
+}
+
+/* When toggle is off */
+.toggle-button.off {
+  background-color: #ccc;
+}
+
+.toggle-button.off .toggle-button-slider {
+  transform: translateX(0);
 }

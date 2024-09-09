@@ -8,6 +8,7 @@ import cloudinary from 'cloudinary';
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors';
+import helmet from 'helmet';
 
 // routers
 import jobRouter from './routes/jobRouter.js'
@@ -15,6 +16,7 @@ import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import mahasiswaRouter from './routes/mahasiswaRouter.js';
 import orangtuaRouter from './routes/orangtuaRouter.js';
+import scanRouter from './routes/scanRouter.js';
 import settingRouter from './routes/settingRouter.js';
 
 // public 
@@ -25,7 +27,7 @@ import path from 'path';
 // middleware
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 import { authenticateUser } from './middleware/authMiddleware.js';
-import helmet from 'helmet';
+import { log } from 'console';
 
 dotenv.config()
 const app = express()
@@ -65,10 +67,11 @@ app.get('/api/v1/test', (req, res) => {
 })
 
 
-app.use('/api/v1/jobs', authenticateUser, jobRouter);
+// app.use('/api/v1/jobs', authenticateUser, jobRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/mahasiswa', authenticateUser, mahasiswaRouter);
+app.use('/api/v1/scan', authenticateUser, scanRouter);
 app.use('/api/v1/orangtua', authenticateUser, orangtuaRouter);
 app.use('/api/v1/settings', authenticateUser, settingRouter);
 
@@ -83,13 +86,29 @@ app.use('*', (req, res) => {
 
 app.use(errorHandlerMiddleware);
 
+// io.on('connection', (socket) => {
+//     console.log('a user connected', socket.id);
+//     socket.on('display', (msg) => {
+//         // console.log('asdfasdf', msg);
+//         io.emit("display", msg)
+//     })
+// });
+
 io.on('connection', (socket) => {
     // console.log('a user connected', socket.id);
+    socket.on('register-table', (mejaId) => {
+        console.log(`Socket ${socket.id} bergabung ke meja: ${mejaId}`);
+        socket.join(mejaId);
+    });
+    console.log(socket.rooms);
+    
     socket.on('display', (msg) => {
-        // console.log('asdfasdf', msg);
-        io.emit("display", msg)
-    })
+        const { mahasiswa, mejaId } = msg;
+        io.to(mejaId).emit("display", { mahasiswa, mejaId });
+    });
 });
+
+
 
 const port = process.env.PORT || 5101;
 try {

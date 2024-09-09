@@ -5,6 +5,7 @@ import OrangtuaModel from "../models/OrangtuaModel.js";
 import path from 'path';
 import XLSX from 'xlsx';
 import PDFDocument from 'pdfkit';
+import { log } from "console";
 
 
 export const getAllOrangtua = async (req, res) => {
@@ -72,7 +73,6 @@ export const getAllOrangtua = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        console.log(orangtuas);
         const orangtuasWithNumber = orangtuas.map((orangtua, index) => ({
             ...orangtua.toObject(),
             number: skip + index + 1
@@ -89,6 +89,7 @@ export const getAllOrangtua = async (req, res) => {
 
         const totalOrangtuas = await Orangtua.countDocuments(queryObject);
         const numOfPages = Math.ceil(totalOrangtuas / limit);
+        console.log(orangtuas);
 
         res.status(StatusCodes.OK).json({ total: totalOrangtuas, numOfPages, currentPage: page, data: orangtuasWithQRCodes, qrcode: orangtuasWithQRCodes })
 

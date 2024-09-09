@@ -27,6 +27,17 @@ export const authorizedPermissions = (...roles) => {
     }
 }
 
+export const authorizedPermissionsSettings = (roles) => {
+    return (req, res, next) => {
+        console.log(req.user.role);
+        
+        if (req.user.role !== roles) {
+            throw new UnauthorizedError('Unauthorized to access this route')
+        }
+        next();
+    }
+}
+
 export const checkForTestUser = (req, res, next) => {
     if (req.user.testUser) {
         throw new BadRequestError('Demo User. Read Only!');

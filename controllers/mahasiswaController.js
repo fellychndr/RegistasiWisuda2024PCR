@@ -13,6 +13,7 @@ export const getAllMahasiswas = async (req, res) => {
         isDeleted: false
     };
 
+
     if (search) {
         queryObject = {
             $or: [
@@ -24,7 +25,6 @@ export const getAllMahasiswas = async (req, res) => {
                 { noKursi: { $regex: search, $options: 'i' } },
             ]
         };
-        console.log(queryObject.$or);
     }
     if (isRegis && isRegis == "true") {
         queryObject.isRegis = true;
@@ -281,6 +281,9 @@ export const exportPdfDataMhs = async (req, res) => {
 }
 
 export const importDataMhs = async (req, res) => {
+    // console.log("aa");
+    
+    // return
     try {
 
         const filePath = path.join(process.cwd(), req.file.path);
@@ -321,6 +324,8 @@ export const importDataMhs = async (req, res) => {
 
         res.status(StatusCodes.OK).json({ data: "Berhasil mengimport data" });
     } catch (error) {
+        console.log(error);
+        
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };

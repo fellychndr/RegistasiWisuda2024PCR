@@ -5,23 +5,46 @@ const socket = io("http://localhost:5101", {
   reconnection: true,
 });
 
+
+// client-side
+// socket.on("connect", () => {
+//   console.log(socket.id);
+//   console.log(socket.connected);
+//   console.log("-------------");
+// });
+
+
 const Display = () => {
-  const [showDisplay, setShowDisplay] = useState(true);
+  const [showDisplay, setShowDisplay] = useState(false);
   const [mahasiswa, setMahasiswa] = useState(null);
+  const [currentTableId, setCurrentTableId] = useState(null);
 
   useEffect(() => {
-    socket.on("display", (display) => {
-      setMahasiswa(display);
+    const storedTableId = localStorage.getItem("tableId");
+    if (storedTableId) {
+      socket.emit("register-table", storedTableId);
+      setCurrentTableId(storedTableId);
+    }
+
+    const handleDisplay = (data) => {
+      const { mahasiswa } = data;
+      console.log("Received data:", mahasiswa);
+      setMahasiswa(mahasiswa);
       setShowDisplay(true);
       setTimeout(() => {
-        setMahasiswa(false);
+        setShowDisplay(false);
       }, 4000);
-    });
-  }, []);
+    };
+    socket.on("display", handleDisplay);
+
+    return () => {
+      socket.off("display", handleDisplay);
+    };
+  }, [currentTableId]);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Display Mahasiswa</h1>
+      <h1>Display Orang Tua</h1>
       <br />
       {showDisplay && mahasiswa && (
         <div>
@@ -32,4 +55,5 @@ const Display = () => {
     </div>
   );
 };
+
 export default Display;
