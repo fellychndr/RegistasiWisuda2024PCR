@@ -5,7 +5,6 @@ const socket = io("http://localhost:5101", {
   reconnection: true,
 });
 
-
 // client-side
 // socket.on("connect", () => {
 //   console.log(socket.id);
@@ -13,10 +12,9 @@ const socket = io("http://localhost:5101", {
 //   console.log("-------------");
 // });
 
-
 const Display = () => {
   const [showDisplay, setShowDisplay] = useState(false);
-  const [mahasiswa, setMahasiswa] = useState(null);
+  const [dataScan, setDataScan] = useState(null);
   const [currentTableId, setCurrentTableId] = useState(null);
 
   useEffect(() => {
@@ -26,15 +24,16 @@ const Display = () => {
       setCurrentTableId(storedTableId);
     }
 
-    const handleDisplay = (data) => {
-      const { mahasiswa } = data;
-      console.log("Received data:", mahasiswa);
-      setMahasiswa(mahasiswa);
+    const handleDisplay = (hasil) => {
+      console.log(hasil);
+      
+      setDataScan(hasil);
       setShowDisplay(true);
       setTimeout(() => {
         setShowDisplay(false);
       }, 4000);
     };
+
     socket.on("display", handleDisplay);
 
     return () => {
@@ -42,14 +41,16 @@ const Display = () => {
     };
   }, [currentTableId]);
 
+  // console.log(dataScan);
+
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Display Orang Tua</h1>
+      {/* <h1>Display </h1> */}
       <br />
-      {showDisplay && mahasiswa && (
+      {showDisplay && dataScan && (
         <div>
-          <h1>Selamat Datang</h1>
-          <h1>{mahasiswa.name}</h1>
+          <h1>Selamat Datang {dataScan.message}</h1>
+          <h1>{dataScan.data.name}</h1>
         </div>
       )}
     </div>

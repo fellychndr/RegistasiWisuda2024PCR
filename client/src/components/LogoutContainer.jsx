@@ -24,13 +24,16 @@ const LogoutContainer = () => {
         <FaCaretDown />
       </button>
       <div className={showLogout ? "dropdown show-dropdown" : "dropdown"}>
-        <button
-          type="button"
-          className="dropdown-btn"
-          onClick={() => navigate("/dashboard/settings")}
-        >
-          Setting
-        </button>
+        {user.role === "superadmin" && (
+          <button
+            type="button"
+            className="dropdown-btn"
+            onClick={() => navigate("/dashboard/settings")}
+          >
+            Setting
+          </button>
+        )}
+
         <button type="button" className="dropdown-btn" onClick={logoutUser}>
           Logout
         </button>

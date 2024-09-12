@@ -8,6 +8,14 @@ export const getAllSettings = async () => {
     console.error(error);
   }
 };
+export const getSetting = async ({ id }) => {
+  try {
+    const response = await customFetch.get(`/settings/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const createSetting = async (data) => {
   try {

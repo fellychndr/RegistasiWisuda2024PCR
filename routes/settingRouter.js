@@ -29,26 +29,25 @@ import { authorizedPermissionsSettings } from '../middleware/authMiddleware.js';
 // router.route('/').get(getAllJurusanProdi).post(createJurusanProdi);
 // settings
 router.route('/')
-    .all(authorizedPermissionsSettings('superadmin'))
     .get(getAllSettings)
-    .post(createSettings);
+    .post(authorizedPermissionsSettings('superadmin'), createSettings);
 
 router.route('/meja').get(getAllMeja).post(createMeja);
 
 router.route('/:id')
-    .all(authorizedPermissionsSettings('superadmin'))
+    // .all(authorizedPermissionsSettings('superadmin'))
     .get(getSetting)
-    .patch(updateSetting)
-    .delete(deleteSetting);
+    .patch(authorizedPermissionsSettings('superadmin'),updateSetting)
+    .delete(authorizedPermissionsSettings('superadmin'),deleteSetting);
 
 // router.route('/:id')
 //     .get(getMeja)
 //     .patch(updateMeja)
 //     .delete(deleteMeja);
 
-router.route('/:id')
-    .get(getJurusanProdi)
-    .patch(updateJurusanProdi)
-    .delete(deleteJurusanProdi);
+// router.route('/:id')
+//     .get(getJurusanProdi)
+//     .patch(updateJurusanProdi)
+//     .delete(deleteJurusanProdi);
 
 export default router;

@@ -38,7 +38,7 @@ app.use(
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173", "http://localhost:4173"],
+        origin: [process.env.LINKURL, process.env.LINKURLPROD],
         methods: ["GET", "POST", "PATCH", "DELETE"]
     }
 });
@@ -94,19 +94,54 @@ app.use(errorHandlerMiddleware);
 //     })
 // });
 
+// io.on('connection', (socket) => {
+//     console.log('a user connected', socket.id);
+//     socket.on('register-table', (mejaId) => {
+//         console.log(`Socket ${socket.id} bergabung ke meja: ${mejaId}`);
+//         socket.join(mejaId);
+//     });
+//     console.log(socket.rooms);
+
+//     socket.on('display', (msg) => {
+//         console.log(msg);
+
+//         const { mahasiswa, mejaId } = msg;
+//         io.to(mejaId).emit("display", { mahasiswa, mejaId });
+//     });
+
+//     socket.on('disconnect', () => {
+//         console.log(`User disconnected: ${socket.id}`);
+//     });
+// });
+
+
+
 io.on('connection', (socket) => {
-    // console.log('a user connected', socket.id);
+    console.log('User connected:', socket.id);
+
     socket.on('register-table', (mejaId) => {
         console.log(`Socket ${socket.id} bergabung ke meja: ${mejaId}`);
         socket.join(mejaId);
     });
-    console.log(socket.rooms);
-    
+
+
     socket.on('display', (msg) => {
-        const { mahasiswa, mejaId } = msg;
-        io.to(mejaId).emit("display", { mahasiswa, mejaId });
+        console.log(msg);
+
+        const { hasil, mejaId } = msg;
+        // const { message, data } = hasil;
+        // console.log({message, data});
+
+
+        console.log(`Mengirim data  ke room meja: ${mejaId}`);
+        io.to(mejaId).emit('display', hasil);
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`User disconnected: ${socket.id}`);
     });
 });
+
 
 
 

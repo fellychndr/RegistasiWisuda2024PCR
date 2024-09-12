@@ -6,6 +6,7 @@ export const updateScan = async (req, res) => {
     try {
         let isRegis = true;
         let updatedData;
+        let message;
 
         const updatedMahasiswa = await Mahasiswa.findByIdAndUpdate(req.params.id, { isRegis: isRegis, isRegisBy: req.user.userId }, {
             new: true,
@@ -13,18 +14,20 @@ export const updateScan = async (req, res) => {
 
         if (updatedMahasiswa) {
             updatedData = updatedMahasiswa;
+            message = 'Mahasiswa';
         } else {
             const updatedOrangtua = await Orangtua.findByIdAndUpdate(req.params.id, { isRegis: isRegis, isRegisBy: req.user.userId }, {
                 new: true,
             });
             updatedData = updatedOrangtua;
+            message = 'Orangtua';
         }
 
         if (!updatedData) {
-            return res.status(StatusCodes.NOT_FOUND).json({ msg: 'Data not found' });
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Data not found' });
         }
 
-        res.status(StatusCodes.OK).json({ msg: 'Registration modified', data: updatedData });
+        res.status(StatusCodes.OK).json({ message: message, data: updatedData });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
@@ -37,7 +40,7 @@ export const updateKonsumsi = async (req, res) => {
             new: true,
         });
 
-        res.status(StatusCodes.OK).json({ msg: 'Registration modified', data: updatedOrangtua });
+        res.status(StatusCodes.OK).json({ message: 'Registration modified', data: updatedOrangtua });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }

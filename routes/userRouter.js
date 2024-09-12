@@ -12,7 +12,7 @@ import { validateUpdateUserInput } from '../middleware/validationMiddleware.js';
 import { authorizedPermissions, checkForTestUser } from '../middleware/authMiddleware.js';
 
 router.get('/current-user', getCurrentUser);
-router.get('/admin/app-stats', [authorizedPermissions('admin'), getApplicationStats]);
+router.get('/admin/app-stats', [authorizedPermissions('superadmin'), getApplicationStats]);
 router.patch('/update-user', checkForTestUser, upload.single('avatar'), validateUpdateUserInput, updateUser
 );
 export default router;
