@@ -161,7 +161,7 @@ const Scan = () => {
   };
 
   const displayRegistrasi = () => {
-    const url = "http://localhost:5173/display";
+    const url = `${socketUrl}/display`;
     window.open(url, "_blank");
   };
   // console.log(mejas);

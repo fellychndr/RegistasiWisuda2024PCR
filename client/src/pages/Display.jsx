@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { socketUrl } from "../config/config";
 
-const socket = io("http://localhost:5101", {
+const socket = io(socketUrl, {
   reconnection: true,
 });
 
