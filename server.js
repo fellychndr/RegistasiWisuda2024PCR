@@ -42,11 +42,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const isProduction = process.env.NODE_ENV === 'production';
 
 const server = isProduction ? https.createServer({
-    key: fs.readFileSync("/etc/ssl/certs/wisuda2024_certificate.crt"),
-    cert: fs.readFileSync("/etc/ssl/private/wisuda2024_private.key"),
+    key: fs.readFileSync("/etc/ssl/certs/wisuda2024_certificate.pem"),
+    cert: fs.readFileSync("/etc/ssl/private/wisuda2024_private.pem"),
     requestCert: true,
     ca: [
-        fs.readFileSync("/etc/ssl/certs/wisuda2024_ca.crt")
+        fs.readFileSync("/etc/ssl/certs/wisuda2024_ca.pem")
     ]
 }) : http.createServer(app);
 
