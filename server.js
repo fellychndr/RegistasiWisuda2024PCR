@@ -6,9 +6,12 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cloudinary from 'cloudinary';
 import http from 'http'
+import https from 'https'
 import { Server } from 'socket.io'
 import cors from 'cors';
 import helmet from 'helmet';
+import { readFileSync } from 'fs';
+// import fs from 'fs';
 
 // routers
 import jobRouter from './routes/jobRouter.js'
@@ -34,7 +37,22 @@ app.use(
     cors(),
     helmet()
 );
-const server = http.createServer(app);
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const server = isProduction ? https.createServer({
+    key: readFileSync("/etc/ssl/certs/wisuda2024_certificate.pem"),
+    cert: readFileSync("/etc/ssl/private/wisuda2024_private.pem"),
+    requestCert: true,
+    ca: [
+        readFileSync("/etc/ssl/certs/wisuda2024_ca.pem")
+    ]
+}, app) : http.createServer(app);
+
+
+// const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         origin: [process.env.LINKURL, process.env.LINKURLPROD],
@@ -48,7 +66,7 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET,
 });
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
 if (process.env.NODE_ENV === "development") {
     app.use(morgan('dev'));
 }
