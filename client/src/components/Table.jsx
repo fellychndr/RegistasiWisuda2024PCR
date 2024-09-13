@@ -73,11 +73,6 @@ const Table = ({ titleTable, context }) => {
           <button
             type="button"
             className="btn"
-            style={{
-              display: "flex",
-              alignIttems: "center",
-              justifyContent: "center",
-            }}
             onClick={handleExportPDF}
           >
             <BiExport size={15} style={{ marginRight: "0.3rem" }} /> Export PDF

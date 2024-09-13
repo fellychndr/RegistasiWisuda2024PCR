@@ -11,6 +11,11 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 1rem 0.5rem 1rem;
   border-radius: 5px;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
 `;
 
 const LabelButton = ({ title, linkUrl }) => {

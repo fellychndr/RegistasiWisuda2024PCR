@@ -75,9 +75,6 @@ export const Register = async (id, mejaId) => {
   if (id) {
     try {
       const data = await customFetch.patch(`/scan/${id}`);
-      console.log("========== regster ==========");
-      console.log(data);
-      console.log("========== regster ==========");
 
       toast.success("Berhasil Registrasi");
       socket.emit("display", { hasil: data.data, mejaId });
@@ -95,20 +92,20 @@ const Scan = () => {
   const [selectedMeja, setSelectedMeja] = useState("");
   const [mejas, setMeja] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(() => {
-    if (localStorage.getItem("tableId") === null) {
+    if (
+      localStorage.getItem("tableId") === null ||
+      localStorage.getItem("tableId") === "null"
+    ) {
       return true;
     } else {
       return false;
     }
   });
 
-  console.log(loadedData);
-
   useEffect(() => {
     const meja = localStorage.getItem("tableId");
     setSelectedMeja(meja);
     socket.emit("register-table", meja);
-    localStorage.setItem("tableId", meja);
 
     const fetchTables = async () => {
       try {
@@ -152,6 +149,8 @@ const Scan = () => {
 
   const handleMejaChange = (event) => {
     const mejaId = event.target.value;
+    localStorage.setItem("tableId", mejaId);
+    socket.emit("register-table", mejaId);
     setSelectedMeja(mejaId);
     setIsModalOpen(false);
   };
@@ -165,15 +164,20 @@ const Scan = () => {
     const url = "http://localhost:5173/display";
     window.open(url, "_blank");
   };
+  // console.log(mejas);
 
   return (
     <Wrapper>
       <Modal isOpen={isModalOpen}>
-        <h6 className="form-title">Pilih Meja</h6>
         <div className="form-center">
+          <label htmlFor="Pilih Meja" className="form-label">
+            Pilih Meja
+          </label>
           <select
-            id="table-select"
-            value={selectedMeja}
+            name="Pilih Meja"
+            id="Pilih Meja"
+            className="form-select"
+            value={selectedMeja || ""}
             onChange={handleMejaChange}
           >
             <option value="">Pilih Meja</option>

@@ -21,7 +21,7 @@ const Register = () => {
   return (
     <Wrapper>
       <Form method="post" className="form">
-        <Logo />
+        <Logo width="100%"/>
         <h4>Register</h4>
         <FormRow type="text" name={"name"} labelText={"Nama"}/>
         <FormRow type="text" name={"username"} labelText={"Username"} />

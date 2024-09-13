@@ -9,7 +9,7 @@ import { sendResetEmail } from '../utils/sendResetEmail.js';
 export const register = async (req, res) => {
     try {
         const isFirtsAccount = await User.countDocuments() === 0
-        req.body.role = isFirtsAccount ? 'admin' : 'user';
+        req.body.role = isFirtsAccount ? 'superadmin' : 'admin';
 
         const hashedPassword = await hashPassword(req.body.password);
         req.body.password = hashedPassword;
