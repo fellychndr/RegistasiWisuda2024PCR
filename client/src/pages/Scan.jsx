@@ -169,7 +169,7 @@ const Scan = () => {
   return (
     <Wrapper>
       <Modal isOpen={isModalOpen}>
-        <div className="form-center">
+        <div style={{ gridTemplateColumns: "1fr" }}>
           <label htmlFor="Pilih Meja" className="form-label">
             Pilih Meja
           </label>

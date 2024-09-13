@@ -10,6 +10,7 @@ import https from 'https'
 import { Server } from 'socket.io'
 import cors from 'cors';
 import helmet from 'helmet';
+import fs from 'fs';
 
 // routers
 import jobRouter from './routes/jobRouter.js'
