@@ -15,11 +15,11 @@ const socket = io(socketUrl, {
   reconnection: false,
 });
 
-// socket.on("connect", () => {
-//   console.log(socket.id);
-//   console.log(socket.connected);
-//   console.log("-------------");
-// });
+socket.on("connect", () => {
+  console.log(socket.id);
+  console.log(socket.connected);
+  console.log("-------------");
+});
 
 const Container = styled.div`
   display: flex;
