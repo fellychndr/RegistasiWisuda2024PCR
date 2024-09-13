@@ -10,7 +10,8 @@ import https from 'https'
 import { Server } from 'socket.io'
 import cors from 'cors';
 import helmet from 'helmet';
-import fs from 'fs';
+import { readFileSync } from 'fs';
+// import fs from 'fs';
 
 // routers
 import jobRouter from './routes/jobRouter.js'
@@ -42,11 +43,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const isProduction = process.env.NODE_ENV === 'production';
 
 const server = isProduction ? https.createServer({
-    key: fs.readFileSync("/etc/ssl/certs/wisuda2024_certificate.pem"),
-    cert: fs.readFileSync("/etc/ssl/private/wisuda2024_private.pem"),
+    key: readFileSync("/etc/ssl/certs/wisuda2024_certificate.pem"),
+    cert: readFileSync("/etc/ssl/private/wisuda2024_private.pem"),
     requestCert: true,
     ca: [
-        fs.readFileSync("/etc/ssl/certs/wisuda2024_ca.pem")
+        readFileSync("/etc/ssl/certs/wisuda2024_ca.pem")
     ]
 }) : http.createServer(app);
 
