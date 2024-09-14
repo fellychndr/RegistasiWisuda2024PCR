@@ -1,8 +1,12 @@
 import Mahasiswa from '../models/MahasiswaModel.js';
 import Orangtua from "../models/OrangtuaModel.js";
 import { StatusCodes } from "http-status-codes";
+import { pusher } from '../utils/pusherUtils.js';
 
 export const updateScan = async (req, res) => {
+
+    console.log(req.body.mejaId);
+
     try {
         let isRegis = true;
         let updatedData;
@@ -27,8 +31,14 @@ export const updateScan = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Data not found' });
         }
 
+        pusher.trigger(req.body.mejaId, "my-event", {
+            message: message, data: updatedData
+        });
+
         res.status(StatusCodes.OK).json({ message: message, data: updatedData });
     } catch (error) {
+        console.log(error);
+
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };

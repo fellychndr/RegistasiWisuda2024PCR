@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { socketUrl } from "../config/config";
+// import { io } from "socket.io-client";
+// import { socketUrl } from "../config/config";
+import { pusher } from "../utils/pusherUtils";
 
-const socket = io(socketUrl, {
-  reconnection: true,
-});
+// const socket = io(socketUrl, {
+//   reconnection: true,
+// });
 
 // client-side
 // socket.on("connect", () => {
@@ -16,31 +17,42 @@ const socket = io(socketUrl, {
 const Display = () => {
   const [showDisplay, setShowDisplay] = useState(false);
   const [dataScan, setDataScan] = useState(null);
-  const [currentTableId, setCurrentTableId] = useState(null);
+  const [registrasionGate, setRegistrasionGate] = useState(null);
 
+  
   useEffect(() => {
-    const storedTableId = localStorage.getItem("tableId");
-    if (storedTableId) {
-      socket.emit("register-table", storedTableId);
-      setCurrentTableId(storedTableId);
+    const registrastionGateId = localStorage.getItem("tableId");
+    if (registrastionGateId) {
+      setRegistrasionGate(registrastionGateId);
     }
-
-    const handleDisplay = (hasil) => {
-      console.log(hasil);
-      
-      setDataScan(hasil);
+    
+    const channel = pusher.subscribe(registrastionGateId);
+    channel.bind("my-event", (data) => {
+      setDataScan(data);
       setShowDisplay(true);
       setTimeout(() => {
         setShowDisplay(false);
       }, 4000);
-    };
 
-    socket.on("display", handleDisplay);
+      console.log(data);
+    });
 
-    return () => {
-      socket.off("display", handleDisplay);
-    };
-  }, [currentTableId]);
+    // const handleDisplay = (hasil) => {
+    //   console.log(hasil);
+
+    //   setDataScan(hasil);
+    //   setShowDisplay(true);
+    //   setTimeout(() => {
+    //     setShowDisplay(false);
+    //   }, 4000);
+    // };
+
+    // socket.on("display", handleDisplay);
+
+    // return () => {
+    //   socket.off("display", handleDisplay);
+    // };
+  }, [registrasionGate]);
 
   // console.log(dataScan);
 

@@ -6,20 +6,9 @@ import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch.jsx";
 import Fail from "../assets/audio/fail1.mp3";
 import Yay from "../assets/audio/yay.mp3";
-import { io } from "socket.io-client";
 import { socketUrl } from "../config/config.js";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import Modal from "../components/Modal.jsx";
-
-const socket = io(socketUrl, {
-  reconnection: false,
-});
-
-socket.on("connect", () => {
-  console.log(socket.id);
-  console.log(socket.connected);
-  console.log("-------------");
-});
 
 const Container = styled.div`
   display: flex;
@@ -74,10 +63,8 @@ export const cekRegistered = async (id) => {
 export const Register = async (id, mejaId) => {
   if (id) {
     try {
-      const data = await customFetch.patch(`/scan/${id}`);
-
+      const data = await customFetch.patch(`/scan/${id}`, { mejaId });
       toast.success("Berhasil Registrasi");
-      socket.emit("display", { hasil: data.data, mejaId });
       return data;
     } catch (error) {
       toast.error(error.response?.data?.msg || "Terjadi kesalahan");
@@ -105,7 +92,6 @@ const Scan = () => {
   useEffect(() => {
     const meja = localStorage.getItem("tableId");
     setSelectedMeja(meja);
-    socket.emit("register-table", meja);
 
     const fetchTables = async () => {
       try {
@@ -150,7 +136,6 @@ const Scan = () => {
   const handleMejaChange = (event) => {
     const mejaId = event.target.value;
     localStorage.setItem("tableId", mejaId);
-    socket.emit("register-table", mejaId);
     setSelectedMeja(mejaId);
     setIsModalOpen(false);
   };
