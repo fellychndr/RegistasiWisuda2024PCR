@@ -35,8 +35,6 @@ const Table = ({ titleTable, context }) => {
     navigate(`${pathname}?${searchParams.toString()}`);
   };
 
-  
-
   const handlePerRowsChange = (limit) => {
     const searchParams = new URLSearchParams(search);
     searchParams.set("limit", limit);
@@ -45,11 +43,15 @@ const Table = ({ titleTable, context }) => {
 
   const handleExportPDF = async () => {
     try {
-      const response = await await customFetch.get(`${linkUrl}/export`, {
-        headers: {
-          "Content-Type": "application/pdf",
-        },
+      const response = await customFetch.get(`${linkUrl}/export`, {
+        responseType: "blob",
       });
+
+      const blob = new Blob([response.data], { type: response.data.type });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `${linkUrl}.pdf`;
+      link.click();
     } catch (error) {
       console.error("Error exporting PDF:", error);
     }
@@ -70,11 +72,7 @@ const Table = ({ titleTable, context }) => {
         theme={checkDefaultTheme()}
         highlightOnHover
         actions={
-          <button
-            type="button"
-            className="btn"
-            onClick={handleExportPDF}
-          >
+          <button type="button" className="btn" onClick={handleExportPDF}>
             <BiExport size={15} style={{ marginRight: "0.3rem" }} /> Export PDF
           </button>
         }

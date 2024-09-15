@@ -4,6 +4,8 @@ import qrcode from 'qrcode';
 import path from 'path';
 import XLSX from 'xlsx';
 import PDFDocument from 'pdfkit';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 export const getAllMahasiswas = async (req, res) => {
     const { search, jurusan, prodi, isRegis, sort } = req.query;
@@ -232,57 +234,9 @@ export const getExportMhs = async (req, res) => {
     }
 };
 
-export const exportPdfDataMhs = async (req, res) => {
-    try {
-        const { data } = await getExportMhs(req, res);
-
-        const doc = new PDFDocument({ size: 'A4', margin: 50 });
-
-        res.setHeader('Content-Disposition', 'attachment; filename=mahasiswas.pdf');
-        res.setHeader('Content-Type', 'application/pdf');
-
-        doc.pipe(res);
-
-        doc.fontSize(12).text('Data Mahasiswa', { align: 'center' });
-
-        data.forEach((mahasiswa, i) => {
-            // Estimasi tinggi data dan QR code
-            const dataHeight = 100;
-
-            // Cek apakah ruang cukup di halaman saat ini
-            if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
-                doc.addPage();
-            }
-
-            doc.moveDown();
-            doc.fontSize(10)
-                .text(`No: ${mahasiswa.number}`, 50)
-                .text(`NIM: ${mahasiswa.nim}`, 50)
-                .text(`Nama: ${mahasiswa.name}`, 50)
-                .text(`Jurusan: ${mahasiswa.jurusan}`, 50)
-                .text(`Prodi: ${mahasiswa.prodi}`, 50)
-                .text(`No Kursi: ${mahasiswa.noKursi}`, 50)
-                .text(`No Ijazah: ${mahasiswa.noIjazah}`, 50, doc.y)
-
-            // Menambahkan gambar QR code di sebelah kanan data
-            doc.image(mahasiswa.qr_code, doc.page.width - 150, doc.y - 94, {
-                fit: [100, 100],
-                align: 'right',
-                valign: 'center'
-            });
-
-            doc.moveDown(1);
-        });
-
-        doc.end();
-    }  catch (error) {
-        res.status(500).json({ message: 'Error generating PDF', error: error.message });
-    }
-}
-
 export const importDataMhs = async (req, res) => {
     // console.log("aa");
-    
+
     // return
     try {
 
@@ -325,7 +279,131 @@ export const importDataMhs = async (req, res) => {
         res.status(StatusCodes.OK).json({ data: "Berhasil mengimport data" });
     } catch (error) {
         console.log(error);
-        
+
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };
+
+export const exportPdfDataMhs = async (req, res) => {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    try {
+        const { data } = await getExportMhs(req, res);
+
+        const doc = new PDFDocument({ size: 'A4', margin: 50 });
+
+        // Menentukan path file PDF yang akan disimpan ke folder public
+        const filePath = path.join(__dirname, '../public/exports', 'mahasiswas.pdf');
+
+        // Buat stream untuk menyimpan file PDF
+        const writeStream = fs.createWriteStream(filePath);
+
+        // Piping PDF ke file
+        doc.pipe(writeStream);
+
+        // Isi konten PDF
+        doc.fontSize(12).text('Data Mahasiswa', { align: 'center' });
+
+        data.forEach((mahasiswa) => {
+            // Estimasi tinggi data dan QR code
+            const dataHeight = 100;
+
+            // Cek apakah ruang cukup di halaman saat ini
+            if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
+                doc.addPage();
+            }
+
+            doc.moveDown();
+            doc.fontSize(10)
+                .text(`No: ${mahasiswa.number}`, 50)
+                .text(`NIM: ${mahasiswa.nim}`, 50)
+                .text(`Nama: ${mahasiswa.name}`, 50)
+                .text(`Jurusan: ${mahasiswa.jurusan}`, 50)
+                .text(`Prodi: ${mahasiswa.prodi}`, 50)
+                .text(`No Kursi: ${mahasiswa.noKursi}`, 50)
+                .text(`No Ijazah: ${mahasiswa.noIjazah}`, 50);
+
+            // Menambahkan gambar QR code di sebelah kanan data
+            doc.image(mahasiswa.qr_code, doc.page.width - 150, doc.y - 94, {
+                fit: [100, 100],
+                align: 'right',
+                valign: 'center'
+            });
+
+            doc.moveDown(1);
+            doc.moveTo(50, doc.y).lineTo(doc.page.width - 50, doc.y).stroke();
+        });
+
+        // Selesaikan dokumen PDF
+        doc.end();
+
+        // Tunggu sampai proses penulisan selesai
+        writeStream.on('finish', () => {
+            console.log('PDF generated successfully!');
+            res.sendFile(filePath, (err) => {
+                if (err) {
+                    console.error('Error sending file:', err);
+                    console.log(err);
+                } else {
+
+                    fs.unlinkSync(filePath);
+                    console.log('PDF file deleted after sending.');
+                }
+            })
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({ message: 'Error generating PDF', error: error.message });
+    }
+}
+
+// export const exportPdfDataMhs = async (req, res) => {
+//     try {
+//         const { data } = await getExportMhs(req, res);
+
+//         const doc = new PDFDocument({ size: 'A4', margin: 50 });
+
+//         res.setHeader('Content-Disposition', 'attachment; filename=mahasiswas.pdf');
+//         res.setHeader('Content-Type', 'application/pdf');
+
+//         doc.pipe(res);
+
+//         doc.fontSize(12).text('Data Mahasiswa', { align: 'center' });
+
+//         data.forEach((mahasiswa, i) => {
+//             // Estimasi tinggi data dan QR code
+//             const dataHeight = 100;
+
+//             // Cek apakah ruang cukup di halaman saat ini
+//             if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
+//                 doc.addPage();
+//             }
+
+//             doc.moveDown();
+//             doc.fontSize(10)
+//                 .text(`No: ${mahasiswa.number}`, 50)
+//                 .text(`NIM: ${mahasiswa.nim}`, 50)
+//                 .text(`Nama: ${mahasiswa.name}`, 50)
+//                 .text(`Jurusan: ${mahasiswa.jurusan}`, 50)
+//                 .text(`Prodi: ${mahasiswa.prodi}`, 50)
+//                 .text(`No Kursi: ${mahasiswa.noKursi}`, 50)
+//                 .text(`No Ijazah: ${mahasiswa.noIjazah}`, 50, doc.y)
+
+//             // Menambahkan gambar QR code di sebelah kanan data
+//             doc.image(mahasiswa.qr_code, doc.page.width - 150, doc.y - 94, {
+//                 fit: [100, 100],
+//                 align: 'right',
+//                 valign: 'center'
+//             });
+
+//             doc.moveDown(1);
+//         });
+
+//         doc.end();
+//     }  catch (error) {
+//         res.status(500).json({ message: 'Error generating PDF', error: error.message });
+//     }
+// }
+

@@ -5,7 +5,8 @@ import OrangtuaModel from "../models/OrangtuaModel.js";
 import path from 'path';
 import XLSX from 'xlsx';
 import PDFDocument from 'pdfkit';
-import { log } from "console";
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 
 export const getAllOrangtua = async (req, res) => {
@@ -208,49 +209,6 @@ export const getExportOrtu = async (req, res) => {
     }
 };
 
-export const exportPdfDataOrtu = async (req, res) => {
-    try {
-        const { data } = await getExportOrtu(req, res);
-
-        const doc = new PDFDocument({ size: 'A4', margin: 50 });
-
-        res.setHeader('Content-Disposition', 'attachment; filename=orangtua.pdf');
-        res.setHeader('Content-Type', 'application/pdf');
-
-        doc.pipe(res);
-
-        doc.fontSize(12).text('Data Orang Tua', { align: 'center' });
-
-        data.forEach((orangtua, i) => {
-            // Estimasi tinggi data dan QR code
-            const dataHeight = 100;
-
-            // Cek apakah ruang cukup di halaman saat ini
-            if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
-                doc.addPage();
-            }
-
-            doc.moveDown();
-            doc.fontSize(10)
-                .text(`No: ${orangtua.number}`, 50)
-                .text(`Nama: ${orangtua.name}`, 50)
-                .text(`Prodi: ${orangtua.prodi}`, 50)
-                .text(`No Kursi: ${orangtua.noKursi}`, 50, doc.y)
-            doc.image(orangtua.qr_code, doc.page.width - 150, doc.y - 54, {
-                fit: [100, 100],
-                align: 'right',
-                valign: 'center'
-            });
-
-            doc.moveDown(4);
-        });
-
-        doc.end();
-    } catch (error) {
-        res.status(500).json({ message: 'Error generating PDF', error: error.message });
-    }
-}
-
 export const importDataOrtu = async (req, res) => {
     try {
 
@@ -314,3 +272,117 @@ export const importDataOrtu = async (req, res) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };
+
+export const exportPdfDataOrtu = async (req, res) => {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    try {
+        const { data } = await getExportOrtu(req, res);
+
+        const doc = new PDFDocument({ size: 'A4', margin: 50 });
+
+        // Menentukan path file PDF yang akan disimpan ke folder public
+        const filePath = path.join(__dirname, '../public/exports', 'orangtua.pdf');
+
+        // Buat stream untuk menyimpan file PDF
+        const writeStream = fs.createWriteStream(filePath);
+
+        // Piping PDF ke file
+        doc.pipe(writeStream);
+
+        // Isi konten PDF
+        doc.fontSize(12).text('Data Orangtua', { align: 'center' });
+
+        data.forEach((orangtua, i) => {
+            // Estimasi tinggi data dan QR code
+            const dataHeight = 100;
+
+            // Cek apakah ruang cukup di halaman saat ini
+            if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
+                doc.addPage();
+            }
+
+            doc.moveDown();
+            doc.fontSize(10)
+                .text(`No: ${orangtua.number}`, 50)
+                .text(`Nama: ${orangtua.name}`, 50)
+                .text(`Prodi: ${orangtua.prodi}`, 50)
+                .text(`No Kursi: ${orangtua.noKursi}`, 50, doc.y)
+            doc.image(orangtua.qr_code, doc.page.width - 150, doc.y - 54, {
+                fit: [100, 100],
+                align: 'right',
+                valign: 'center'
+            });
+
+            doc.moveDown(4);
+            doc.moveTo(50, doc.y).lineTo(doc.page.width - 50, doc.y).stroke();
+            // doc.moveDown(2);
+        });
+
+        // Selesaikan dokumen PDF
+        doc.end();
+
+        // Tunggu sampai proses penulisan selesai
+        writeStream.on('finish', () => {
+            console.log('PDF generated successfully!');
+            res.sendFile(filePath, (err) => {
+                if (err) {
+                    console.error('Error sending file:', err);
+                    console.log(err);
+                } else {
+
+                    fs.unlinkSync(filePath);
+                    console.log('PDF file deleted after sending.');
+                }
+            })
+        });
+
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({ message: 'Error generating PDF', error: error.message });
+    }
+}
+
+// export const exportPdfDataOrtu = async (req, res) => {
+//     try {
+//         const { data } = await getExportOrtu(req, res);
+
+//         const doc = new PDFDocument({ size: 'A4', margin: 50 });
+
+//         res.setHeader('Content-Disposition', 'attachment; filename=orangtua.pdf');
+//         res.setHeader('Content-Type', 'application/pdf');
+
+//         doc.pipe(res);
+
+//         doc.fontSize(12).text('Data Orang Tua', { align: 'center' });
+
+//         data.forEach((orangtua, i) => {
+//             // Estimasi tinggi data dan QR code
+//             const dataHeight = 100;
+
+//             // Cek apakah ruang cukup di halaman saat ini
+//             if (doc.y + dataHeight > doc.page.height - doc.page.margins.bottom) {
+//                 doc.addPage();
+//             }
+
+//             doc.moveDown();
+//             doc.fontSize(10)
+//                 .text(`No: ${orangtua.number}`, 50)
+//                 .text(`Nama: ${orangtua.name}`, 50)
+//                 .text(`Prodi: ${orangtua.prodi}`, 50)
+//                 .text(`No Kursi: ${orangtua.noKursi}`, 50, doc.y)
+//             doc.image(orangtua.qr_code, doc.page.width - 150, doc.y - 54, {
+//                 fit: [100, 100],
+//                 align: 'right',
+//                 valign: 'center'
+//             });
+
+//             doc.moveDown(4);
+//         });
+
+//         doc.end();
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error generating PDF', error: error.message });
+//     }
+// }
