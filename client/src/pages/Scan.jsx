@@ -189,8 +189,10 @@ const Scan = () => {
         <Container>
           <Html5QrcodePlugin
             fps={10}
-            qrbox={300}
-            qrCodeSuccessCallback={setDecodedText} // Update decodedText langsung ketika scan berhasil
+            qrCodeSuccessCallback={setDecodedText}
+            // qrCodeErrorCallback={(error) =>
+            //   console.error("Error decoding", error)
+            // }
           />
           <div className="Result-container">
             <div className="Result-header">Hasil Scan QR Code</div>
