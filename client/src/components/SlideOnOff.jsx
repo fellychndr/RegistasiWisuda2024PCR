@@ -1,21 +1,22 @@
 import { useState } from "react";
 import customFetch from "../utils/customFetch";
+import { useSettingsContext } from "../pages/settings/SettingsContext";
 
-const ToggleButton = ({ id, isEnabled }) => {
+const ToggleButton = ({ id, featureName, isEnabled }) => {
   const [isOn, setIsOn] = useState(isEnabled);
+  const { updateSetting } = useSettingsContext();
 
-  const toggleSwitch = () => {
-    setIsOn(!isOn);
-    handleToggle(id);
-  };
+  const toggleSwitch = async () => {
+    const newIsOn = !isOn;
+    setIsOn(newIsOn);
 
-  const handleToggle = async (id) => {
     try {
-      const data = { isEnabled: !isOn };
-      const response = await customFetch.patch(`/settings/${id}`, data);
-      console.log(response);
+      await customFetch.patch(`/settings/${id}`, { isEnabled: newIsOn });
+
+      // Update setting in the global context
+      updateSetting(featureName, newIsOn);
     } catch (error) {
-      console.log(error);
+      console.log("Error updating setting:", error);
     }
   };
 

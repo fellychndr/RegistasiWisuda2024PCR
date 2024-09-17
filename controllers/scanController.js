@@ -1,7 +1,7 @@
 import Mahasiswa from '../models/MahasiswaModel.js';
 import Orangtua from "../models/OrangtuaModel.js";
 import { StatusCodes } from "http-status-codes";
-import { pusher } from '../utils/pusherUtils.js';
+import { triggerPusher } from '../utils/triggerPusher.js';
 
 export const updateScan = async (req, res) => {
 
@@ -23,6 +23,11 @@ export const updateScan = async (req, res) => {
             const updatedOrangtua = await Orangtua.findByIdAndUpdate(req.params.id, { isRegis: isRegis, isRegisBy: req.user.userId }, {
                 new: true,
             });
+
+            if (updatedOrangtua && updatedOrangtua.isRegis && req.enabledFeatures.Konsumsi) {
+                await updateKonsumsi(req, res);
+            }
+
             updatedData = updatedOrangtua;
             message = 'Orangtua';
         }
@@ -31,9 +36,7 @@ export const updateScan = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Data not found' });
         }
 
-        pusher.trigger(req.body.mejaId, "my-event", {
-            message: message, data: updatedData
-        });
+        triggerPusher(req.body.mejaId, message, updatedData);
 
         res.status(StatusCodes.OK).json({ message: message, data: updatedData });
     } catch (error) {
@@ -42,6 +45,7 @@ export const updateScan = async (req, res) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };
+
 
 export const updateKonsumsi = async (req, res) => {
     try {

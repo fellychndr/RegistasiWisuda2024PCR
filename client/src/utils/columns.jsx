@@ -249,7 +249,7 @@ export const getColumnsActivationFeatures = () => [
     name: "Action",
     cell: (row) => (
       <div>
-        <ToggleButton id={row._id} isEnabled={row.isEnabled} />
+        <ToggleButton id={row._id} featureName={row.featureName} isEnabled={row.isEnabled} />
       </div>
     ),
   },

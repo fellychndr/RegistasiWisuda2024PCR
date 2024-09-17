@@ -6,6 +6,7 @@ import LogoutContainer from "./LogoutContainer";
 import ThemeToggle from "./ThemeToggle";
 const Navbar = () => {
   const { toggleSidebar } = useDashboardContext();
+  
   return (
     <Wrapper style={{ zIndex: 10 }}>
       <div className="nav-center">

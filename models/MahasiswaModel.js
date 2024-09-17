@@ -14,6 +14,10 @@ const MahasiswaSchema = new mongoose.Schema(
             type: String,
             unique: true,
         },
+        email: {
+            type: String,
+            unique: true,
+        },
         jurusan: {
             type: String,
             enum: Object.values(JURUSAN),

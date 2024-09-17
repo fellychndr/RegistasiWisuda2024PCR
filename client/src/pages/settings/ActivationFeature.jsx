@@ -16,11 +16,14 @@ const ActivationFeatures = () => {
 
   useEffect(() => {
     const fetchSetting = async () => {
+      let featureNames = {};
       try {
         const data = await getAllSettings();
-        console.log(data);
-        
         setSetting(data);
+        data.data.map((setting) => {
+          featureNames[setting.featureName] = setting.isEnabled;
+        });
+        // localStorage.setItem("featureNames", JSON.stringify(featureNames));
       } catch (error) {
         toast.error("Gagal memuat data setting.");
       }

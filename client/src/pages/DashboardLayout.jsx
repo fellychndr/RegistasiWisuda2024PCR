@@ -5,6 +5,7 @@ import { useState, createContext, useContext } from "react";
 import { checkDefaultTheme } from "../App";
 import customFetch from "../utils/customFetch";
 import { toast } from "react-toastify";
+import { SettingsProvider } from "../pages/settings/SettingsContext";
 
 export const loader = async () => {
   try {
@@ -20,7 +21,6 @@ const DashboardContext = createContext();
 const DashboardLayout = () => {
   const { user } = useLoaderData();
   const navigate = useNavigate();
-  
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(checkDefaultTheme());
@@ -38,34 +38,36 @@ const DashboardLayout = () => {
 
   const logoutUser = async () => {
     navigate("/");
-    await customFetch.get('/auth/logout')
-    toast.success('Berhasil Logout!')
+    await customFetch.get("/auth/logout");
+    toast.success("Berhasil Logout!");
   };
 
   return (
-    <DashboardContext.Provider
-      value={{
-        user,
-        showSidebar,
-        isDarkTheme,
-        toggleDarkTheme,
-        toggleSidebar,
-        logoutUser,
-      }}
-    >
-      <Wrapper>
-        <main className="dashboard">
-          <SmallSidebar />
-          <BigSidebar />
-          <div>
-            <Navbar />
-            <div className="dashboard-page">
-              <Outlet context={{ user }} />
+    <SettingsProvider>
+      <DashboardContext.Provider
+        value={{
+          user,
+          showSidebar,
+          isDarkTheme,
+          toggleDarkTheme,
+          toggleSidebar,
+          logoutUser,
+        }}
+      >
+        <Wrapper>
+          <main className="dashboard">
+            <SmallSidebar />
+            <BigSidebar />
+            <div>
+              <Navbar />
+              <div className="dashboard-page">
+                <Outlet context={{ user }} />
+              </div>
             </div>
-          </div>
-        </main>
-      </Wrapper>
-    </DashboardContext.Provider>
+          </main>
+        </Wrapper>
+      </DashboardContext.Provider>
+    </SettingsProvider>
   );
 };
 export const useDashboardContext = () => useContext(DashboardContext);
