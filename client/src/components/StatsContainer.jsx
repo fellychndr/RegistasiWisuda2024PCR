@@ -11,6 +11,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <IoCloseCircle />,
       color: "#d66a6a",
       bcg: "#ffeeee",
+      link: "mahasiswa",
     },
     {
       title: "Mahasiswa JTI",
@@ -18,6 +19,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <IoCloseCircle />,
       color: "#d66a6a",
       bcg: "#ffeeee",
+      link: "mahasiswa?jurusan=JTI",
     },
     {
       title: "Mahasiswa JTIN",
@@ -25,6 +27,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <IoCloseCircle />,
       color: "#d66a6a",
       bcg: "#ffeeee",
+      link: "mahasiswa?jurusan=JTIN",
     },
     {
       title: "Mahasiswa AKTP",
@@ -32,6 +35,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <IoCloseCircle />,
       color: "#d66a6a",
       bcg: "#ffeeee",
+      link: "mahasiswa?jurusan=AKTP",
     },
     {
       title: "Seluruh Mahasiswa Registered",
@@ -39,6 +43,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <FaCheckCircle size={30} />,
       color: "#1d955d",
       bcg: "#daf2e7",
+      link: "mahasiswa?isRegis=true",
     },
     {
       title: "Mahasiswa JTI",
@@ -46,6 +51,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <FaCheckCircle size={30} />,
       color: "#1d955d",
       bcg: "#daf2e7",
+      link: "mahasiswa?isRegis=true&jurusan=JTI",
     },
     {
       title: "Mahasiswa JTIN",
@@ -53,6 +59,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <FaCheckCircle size={30} />,
       color: "#1d955d",
       bcg: "#daf2e7",
+      link: "mahasiswa?isRegis=true&jurusan=JTIN",
     },
     {
       title: "Mahasiswa AKTP",
@@ -60,6 +67,7 @@ const StatsContainer = ({ defaultStats }) => {
       icon: <FaCheckCircle size={30} />,
       color: "#1d955d",
       bcg: "#daf2e7",
+      link: "mahasiswa?isRegis=true&jurusan=AKTP",
     },
     // {
     //   title: "All Mahasiswa a",
