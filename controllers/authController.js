@@ -8,6 +8,7 @@ import { sendResetEmail } from '../utils/sendResetEmail.js';
 
 export const register = async (req, res) => {
     try {
+        if (!req.enableFeatures) throw new UnauthenticatedError('Register is not enabled');
         const isFirtsAccount = await User.countDocuments() === 0
         req.body.role = isFirtsAccount ? 'superadmin' : 'admin';
 
@@ -17,6 +18,8 @@ export const register = async (req, res) => {
         const user = await User.create(req.body);
         res.status(StatusCodes.CREATED).json({ msg: "user created" });
     } catch (error) {
+        console.log(error);
+
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };
