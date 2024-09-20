@@ -111,7 +111,7 @@ export const createOrangtua = async (req, res) => {
 
 export const getOrangtua = async (req, res) => {
     try {
-        const orangtua = await Orangtua.findOne(req.params.id)
+        const orangtua = await Orangtua.findById(req.params.id)
         res.status(StatusCodes.OK).json({ orangtua })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
@@ -144,6 +144,7 @@ export const updateOrangtuaKonsumsi = async (req, res) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 };
+
 export const updateOrangtuaRegister = async (req, res) => {
     try {
         let isRegis = true;

@@ -14,6 +14,9 @@ export { default as EditMahasiswa } from './mahasiswa/EditMahasiswa';
 
 export { default as OrangTua } from './orangtua/OrangTua';
 export { default as TambahOrangtua } from './orangtua/TambahOrangtua';
+export { default as EditOrangTua } from './orangtua/EditOrangTua';
+
+
 export { default as Scan } from './Scan';
 export { default as Display } from './Display';
 export { default as Settings } from './settings/Settings'

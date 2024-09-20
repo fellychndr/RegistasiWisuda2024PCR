@@ -11,7 +11,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 // routers
-import jobRouter from './routes/jobRouter.js'
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js';
 import mahasiswaRouter from './routes/mahasiswaRouter.js';
@@ -66,13 +65,13 @@ app.get('/api/v1/test', (req, res) => {
 })
 
 
-// app.use('/api/v1/jobs', authenticateUser, jobRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
 app.use('/api/v1/mahasiswa', authenticateUser, mahasiswaRouter);
-app.use('/api/v1/scan', authenticateUser, scanRouter);
 app.use('/api/v1/orangtua', authenticateUser, orangtuaRouter);
+app.use('/api/v1/scan', authenticateUser, scanRouter);
 app.use('/api/v1/settings', authenticateUser, settingRouter);
+// app.use('/api/v1/admin', authenticateUser);
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './public', 'index.html'))

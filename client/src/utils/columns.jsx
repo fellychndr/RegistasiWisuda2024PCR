@@ -5,6 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { Registered, Confirm } from "../components";
 import Konsumsied from "../components/Konsumsied";
 import ToggleButton from "../components/SlideOnOff";
+import QRCodeCell from "../components/QRcodeCell";
 
 export const getMahasiswaColumns = (navigate) => [
   {
@@ -33,7 +34,7 @@ export const getMahasiswaColumns = (navigate) => [
     name: "Jurusan",
     selector: (row) => row.jurusan,
     sortable: true,
-    width: "6rem",
+    width: "5.2rem",
   },
   {
     name: "Prodi",
@@ -48,18 +49,23 @@ export const getMahasiswaColumns = (navigate) => [
   },
   {
     name: "QR",
-    cell: (row) => <img src={row.qr_code} width={50} height={50} />,
-    sortable: true,
+    cell: (row) => <QRCodeCell row={row} />,
+    // sortable: true,
     width: "5.5rem",
   },
   {
-    name: "Status",
+    name: "Registrasi",
     cell: (row) =>
       row.isRegis ? (
         <button
           className="btn regis-btn"
           onClick={() =>
-            Registered(`/mahasiswa/sudah/${row._id}`, navigate, "mahasiswa")
+            Registered(
+              `/mahasiswa/sudah/${row._id}`,
+              navigate,
+              "mahasiswa",
+              "register"
+            )
           }
         >
           <FaCheckCircle size={15} />
@@ -68,7 +74,12 @@ export const getMahasiswaColumns = (navigate) => [
         <div
           className="btn unregis-btn"
           onClick={() =>
-            Registered(`/mahasiswa/sudah/${row._id}`, navigate, "mahasiswa")
+            Registered(
+              `/mahasiswa/sudah/${row._id}`,
+              navigate,
+              "mahasiswa",
+              "unregister"
+            )
           }
         >
           <IoCloseCircle size={17} />
@@ -133,7 +144,12 @@ export const getOrangtuaColumns = (navigate) => [
         <button
           className="btn regis-btn"
           onClick={() =>
-            Registered(`/orangtua/sudah/${row._id}`, navigate, "orangtua")
+            Registered(
+              `/orangtua/sudah/${row._id}`,
+              navigate,
+              "orangtua",
+              "register"
+            )
           }
         >
           <FaCheckCircle size={15} />
@@ -142,7 +158,12 @@ export const getOrangtuaColumns = (navigate) => [
         <div
           className="btn unregis-btn"
           onClick={() =>
-            Registered(`/orangtua/sudah/${row._id}`, navigate, "orangtua")
+            Registered(
+              `/orangtua/sudah/${row._id}`,
+              navigate,
+              "orangtua",
+              "unregister"
+            )
           }
         >
           <IoCloseCircle size={17} />
@@ -249,7 +270,11 @@ export const getColumnsActivationFeatures = () => [
     name: "Action",
     cell: (row) => (
       <div>
-        <ToggleButton id={row._id} featureName={row.featureName} isEnabled={row.isEnabled} />
+        <ToggleButton
+          id={row._id}
+          featureName={row.featureName}
+          isEnabled={row.isEnabled}
+        />
       </div>
     ),
   },

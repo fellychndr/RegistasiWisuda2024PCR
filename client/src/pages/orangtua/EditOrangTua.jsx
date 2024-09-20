@@ -8,11 +8,11 @@ import FormTambahEdit from "../../components/FormTambahEdit";
 
 export const loader = async ({ params }) => {
   try {
-    const { data } = await customFetch.get(`/mahasiswa/${params.id}`);
+    const { data } = await customFetch.get(`/orangtua/${params.id}`);
     return data;
   } catch (error) {
     toast.error(error.response.data.msg);
-    return redirect("/dashboard/mahasiswa");
+    return redirect("/dashboard/orangtua");
   }
 };
 
@@ -21,22 +21,24 @@ export const action = async ({ request, params }) => {
   const data = Object.fromEntries(formData);
 
   try {
-    await customFetch.patch(`/mahasiswa/${params.id}`, data);
-    toast.success("Mahasiswa berhasil di edit");
-    return redirect("/dashboard/mahasiswa");
+    await customFetch.patch(`/orangtua/${params.id}`, data);
+    toast.success("OrangTua berhasil di edit");
+    return redirect("/dashboard/orangtua");
   } catch (error) {
     toast.error(error.response.data.msg);
     return error;
   }
 };
 
-const EditMahasiswa = () => {
-  const { mahasiswa } = useLoaderData();
+const EditOrangTua = () => {
+  const { orangtua } = useLoaderData();
+  console.log(orangtua);
+  
 
   return (
     <Wrapper>
-      <FormTambahEdit title="Data Mahasiswa" action={"Edit"} data={mahasiswa} />
+      <FormTambahEdit title="Data Orangtua" action="Edit" data={orangtua} />
     </Wrapper>
   );
 };
-export default EditMahasiswa;
+export default EditOrangTua;

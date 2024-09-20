@@ -8,8 +8,6 @@ export const getAllSettings = async (req, res) => {
 
     const { search } = req.query;
 
-    console.log(req.query);
-
     let queryObject = {
         // isDeleted: false
     };

@@ -11,6 +11,8 @@ export const checkFeatureEnabled = (features) => {
             });
             
             req.enabledFeatures = enabledFeatures;
+            console.log(req.enabledFeatures);
+            
             next();
         } catch (error) {
             res.status(500).json({ message: error.message });

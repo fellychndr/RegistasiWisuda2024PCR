@@ -25,7 +25,6 @@ export const loader = async ({ request }) => {
 
 const OrangTua = () => {
   const { data, searchValues } = useLoaderData();
-console.log(data);
 
   return (
     <AllOrangtuasContext.Provider value={{ data, searchValues }}>

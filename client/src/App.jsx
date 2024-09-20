@@ -9,10 +9,11 @@ import {
   Error,
   Scan,
   Mahasiswa,
-  OrangTua,
   TambahMahasiswa,
   EditMahasiswa,
   TambahOrangtua,
+  OrangTua,
+  EditOrangTua,
   Admin,
   Display,
   Settings,
@@ -25,20 +26,27 @@ import { action as loginAction } from "./pages/auth/Login";
 import { action as requesetResetPassword } from "./pages/auth/RequestResetPassword";
 import { action as resetPassword } from "./pages/auth/ResetPassword";
 
-import { action as deleteMahasiswaAction } from "./pages/DeleteMahasiswa";
 import { action as addMahasiswaAction } from "./pages/mahasiswa/TambahMahasiswa";
 import { action as editMahasiswaAction } from "./pages/mahasiswa/EditMahasiswa";
-// import { action as registeredMahasiswaAction } from "./pages/auth/Scan";
-import { action as addOrangTuaAction } from "./pages/orangtua/TambahOrangtua";
-import { action as requesetResetPasswordSetting } from "./pages/settings/Settings";
+import { action as deleteMahasiswaAction } from "./pages/DeleteMahasiswa";
 
+// import { action as registeredMahasiswaAction } from "./pages/auth/Scan";
+
+import { action as addOrangTuaAction } from "./pages/orangtua/TambahOrangtua";
+import { action as editOrangTuaAction } from "./pages/orangtua/EditOrangTua";
+
+import { action as requesetResetPasswordSetting } from "./pages/settings/UserSettings";
+// loader
+
+import { loader as adminLoader } from "./pages/Admin";
 import { loader as berandaLoader } from "./pages/Beranda";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
+
 import { loader as allMahasiswaLoader } from "./pages/mahasiswa/Mahasiswa";
 import { loader as editMahasiswa } from "./pages/mahasiswa/EditMahasiswa";
-import { loader as adminLoader } from "./pages/Admin";
 
 import { loader as allOrangtuaLoader } from "./pages/orangtua/OrangTua";
+import { loader as editOrangTua } from "./pages/orangtua/EditOrangTua";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") === "true";
@@ -127,9 +135,9 @@ const router = createBrowserRouter([
               },
               {
                 path: "edit-orangtua/:id",
-                element: <OrangTua />,
-                // loader: editOrangTua,
-                // action: editOrangTuaAction,
+                element: <EditOrangTua />,
+                loader: editOrangTua,
+                action: editOrangTuaAction,
               },
               {
                 path: "registered",
@@ -143,9 +151,31 @@ const router = createBrowserRouter([
           },
           {
             path: "admin",
-            element: <Admin />,
-            loader: adminLoader,
+            children: [
+              {
+                index: true,
+                element: <Admin />,
+                loader: adminLoader,
+              },
+              {
+                path: "all-users",
+                // element: <EditOrangTua />,
+                // loader: editOrangTua,
+                // action: editOrangTuaAction,
+              },
+              {
+                path: "edit-user/:id",
+                // element: <EditOrangTua />,
+                // loader: editOrangTua,
+                // action: editOrangTuaAction,
+              },
+            ],
           },
+          // {
+          //   path: "admin",
+          //   element: <Admin />,
+          //   loader: adminLoader,
+          // },
           {
             path: "settings",
             element: <Settings />,

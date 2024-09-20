@@ -1,4 +1,4 @@
-import { Form, redirect } from "react-router-dom";
+import { Form } from "react-router-dom";
 import FormRow from "./FormRow";
 import FormRowSelect from "./FormRowSelect";
 import SubmitBtn from "./SubmitBtn";
@@ -9,9 +9,10 @@ import { useState } from "react";
 import customFetch from "../utils/customFetch";
 import { toast } from "react-toastify";
 
-const FormTambahEdit = ({ title, mahasiswa, urlLink }) => {
+const FormTambahEdit = ({ title, data, action, urlLink }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
+  // console.log(title);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -61,7 +62,9 @@ const FormTambahEdit = ({ title, mahasiswa, urlLink }) => {
       </Modal>
       <Form method="post" className="form">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h4 className="form-title">Tambah {title}</h4>
+          <h4 className="form-title">
+            {action} {title}
+          </h4>
           {title === "Data Mahasiswa" || title === "Data Orangtua" ? (
             <button
               onClick={openModal}
@@ -78,31 +81,31 @@ const FormTambahEdit = ({ title, mahasiswa, urlLink }) => {
         </div>
 
         <div className="form-center">
-          {title !== "Data Orangtua" ? (
+          {title == "Data Mahasiswa" ? (
             <>
               <FormRow
                 labelText="NIM"
                 type="text"
                 name="nim"
-                defaultValue={mahasiswa.nim}
+                defaultValue={data?.nim || ""}
               />
               <FormRow
                 type="text"
                 labelText="No Ijazah"
                 name="noIjazah"
-                defaultValue={mahasiswa.noIjazah}
+                defaultValue={data?.noIjazah || ""}
               />
               <FormRowSelect
                 labelText="Jurusan"
                 name="jurusan"
-                defaultValue={mahasiswa.jurusan}
+                defaultValue={data?.jurusan || ""}
                 list={Object.values(JURUSAN)}
               />
               <FormRow
                 type="text"
                 labelText="IPK"
                 name="ipk"
-                defaultValue={mahasiswa.ipk}
+                defaultValue={data?.ipk || ""}
               />
             </>
           ) : (
@@ -112,13 +115,13 @@ const FormTambahEdit = ({ title, mahasiswa, urlLink }) => {
             labelText="Nama"
             type="text"
             name="name"
-            defaultValue={mahasiswa.name}
+            defaultValue={data?.name || ""}
           />
 
           <FormRowSelect
             labelText="Prodi"
             name="prodi"
-            defaultValue={mahasiswa.prodi}
+            defaultValue={data?.prodi || ""}
             list={Object.values(PRODI)}
           />
 
@@ -126,7 +129,7 @@ const FormTambahEdit = ({ title, mahasiswa, urlLink }) => {
             type="text"
             labelText="No Kursi"
             name="noKursi"
-            defaultValue={mahasiswa.noKursi}
+            defaultValue={data?.noKursi || ""}
           />
           <SubmitBtn formBtn />
         </div>

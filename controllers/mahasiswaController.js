@@ -257,7 +257,7 @@ export const importDataMhs = async (req, res) => {
                 continue; // Lewati item ini jika nomor kursi tidak valid
             }
 
-            const mahasiswa = new mahasiswaModel({
+            const mahasiswa = new Mahasiswa({
                 nim: item.NIM,
                 name: item.Nama,
                 nik: item.NIK,

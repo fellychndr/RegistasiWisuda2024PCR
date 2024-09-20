@@ -6,9 +6,10 @@ import { useSettingsContext } from "../pages/settings/SettingsContext";
 const NavLinks = ({ isBigSidebar }) => {
   const { toggleSidebar, user } = useDashboardContext();
   const { settings } = useSettingsContext();
-  console.log(settings);
-  
   const { Scan } = settings;
+
+  console.log(Scan);
+  
   return (
     <div className="nav-links">
       {links.map((link) => {

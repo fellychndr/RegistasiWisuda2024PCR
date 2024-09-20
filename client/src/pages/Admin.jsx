@@ -17,24 +17,23 @@ export const loader = async () => {
 };
 
 const Admin = () => {
-  const { users, jobs } = useLoaderData();
+  const { users } = useLoaderData();
+  const stats = [
+    {
+      title: "Seluruh Mahasiswa Unregistered",
+      count: users || 0,
+      icon: <FaSuitcaseRolling />,
+      color: "#e9b949",
+      bcg: "#fcefc7",
+      link: "all-users",
+    },
+  ];
 
   return (
     <Wrapper>
-      <StatItem
-        title="current users"
-        count={users}
-        color="#e9b949"
-        bcg="#fcefc7"
-        icon={<FaSuitcaseRolling />}
-      />
-      <StatItem
-        title="total jobs"
-        count={jobs}
-        color="#647acb"
-        bcg="#e0e8f9"
-        icon={<FaCalendarCheck />}
-      />
+      {stats.map((item, i) => {
+        return <StatItem key={i} {...item} />;
+      })}
     </Wrapper>
   );
 };

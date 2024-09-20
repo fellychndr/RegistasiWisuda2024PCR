@@ -1,5 +1,5 @@
 import Wrapper from "../../assets/wrappers/FormPage";
-import { redirect, useOutletContext } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import customFetch from "../../utils/customFetch";
 import FormTambahEdit from "../../components/FormTambahEdit";
@@ -18,13 +18,13 @@ export const action = async ({ request }) => {
 };
 
 const TambahOrangtua = () => {
-  const { user } = useOutletContext();
   // console.log(user);
   return (
     <Wrapper>
       <FormTambahEdit
         title="Data Orangtua"
         mahasiswa={""}
+        action="Tambah"
         urlLink={"/orangtua/import"}
       />
     </Wrapper>

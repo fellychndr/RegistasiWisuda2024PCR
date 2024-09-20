@@ -16,7 +16,7 @@ const Landing = () => {
           </h1>
           <p>
             Selamat kepada semua mahasiswa yang telah menyelesaikan perjalanan pendidikan
-            dan melangkah ke masa depan dengan diwisuda hari ini. Semoga
+            dan melangkah ke masa depan dengan di wisuda hari ini. Semoga
             setiap langkah selanjutnya membawa kesuksesan dan kebahagiaan yang
             tiada batas.
           </p>

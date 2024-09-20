@@ -8,9 +8,14 @@ import { sendResetEmail } from '../utils/sendResetEmail.js';
 
 export const register = async (req, res) => {
     try {
-        if (!req.enableFeatures) throw new UnauthenticatedError('Register is not enabled');
         const isFirtsAccount = await User.countDocuments() === 0
         req.body.role = isFirtsAccount ? 'superadmin' : 'admin';
+
+        if (!req.enabledFeatures.Register && isFirtsAccount === false) throw new UnauthenticatedError('Register is not enabled');
+
+        console.log(req.enabledFeatures);
+        console.log(req.enabledFeatures.Register);
+        console.log(isFirtsAccount);
 
         const hashedPassword = await hashPassword(req.body.password);
         req.body.password = hashedPassword;
