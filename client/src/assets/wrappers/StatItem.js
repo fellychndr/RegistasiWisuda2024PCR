@@ -7,7 +7,7 @@ const Wrapper = styled.article`
   border-radius: var(--border-radius);
   position: relative;
   transition: background-color 0.3s ease;
-  margin-top: 0.5rem;
+  margin-top: 0.5;
 
   header {
     display: flex;

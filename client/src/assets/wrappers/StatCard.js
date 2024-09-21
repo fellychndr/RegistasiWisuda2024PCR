@@ -5,7 +5,7 @@ const Wrapper = styled.article`
   border-bottom: 5px solid ${(props) => props.color};
   border-radius: var(--border-radius);
   position: relative;
-  transition: background-color 0.3s ease;
+  /* transition: background-color 0.3s ease; */
 
   header {
     display: flex;
@@ -21,12 +21,36 @@ const Wrapper = styled.article`
     background-color: #ffeeee;
     padding: 1rem 0;
     width: 100%;
+    cursor: pointer;
+    &:hover {
+      background-color:#d66a6a;
+      color: #ffeeee;
+      opacity: 1; 
+      visibility: visible; 
+        transition: background-color 0.3s ease;
+    }
+
+    &:focus {
+      outline: none;
+    }
   }
   .registed {
     color: #1d955d;
     background-color: #daf2e7;
     padding: 1rem 0;
     width: 100%;
+    cursor: pointer;
+    &:hover {
+      background-color:#1d955d;
+      color: #daf2e7;
+      opacity: 1; 
+      visibility: visible; 
+        transition: background-color 0.3s ease;
+    }
+
+    &:focus {
+      outline: none;
+    }
   }
 
   h5 {

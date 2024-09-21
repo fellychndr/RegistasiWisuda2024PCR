@@ -53,12 +53,32 @@ const Beranda = () => {
         setActiveTab={setActiveTab}
       />
       <Wrapper>
-        <StatCard data={ALL} label="Keseluruhan" color="#41bc82" />
-        {initialTab === "mahasiswa" && (
+        <StatCard
+          data={ALL}
+          link={`${initialTab}?`}
+          label="Keseluruhan"
+          color="#41bc82"
+        />
+        {`${initialTab}` === "mahasiswa" && (
           <>
-            <StatCard data={JTI} label="JTI" color="#41bc82" />
-            <StatCard data={JTIN} label="JTIN" color="#41bc82" />
-            <StatCard data={AKTP} label="AKTP" color="#41bc82" />
+            <StatCard
+              data={JTI}
+              link={`${initialTab}?jurusan=JTI`}
+              label="JTI"
+              color="#41bc82"
+            />
+            <StatCard
+              data={JTIN}
+              link={`${initialTab}?jurusan=JTIN`}
+              label="JTIN"
+              color="#41bc82"
+            />
+            <StatCard
+              data={AKTP}
+              link={`${initialTab}?jurusan=AKTP`}
+              label="AKTP"
+              color="#41bc82"
+            />
           </>
         )}
       </Wrapper>
