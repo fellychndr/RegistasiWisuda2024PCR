@@ -7,8 +7,6 @@ const NavLinks = ({ isBigSidebar }) => {
   const { toggleSidebar, user } = useDashboardContext();
   const { settings } = useSettingsContext();
   const { Scan } = settings;
-
-  console.log(Scan);
   
   return (
     <div className="nav-links">

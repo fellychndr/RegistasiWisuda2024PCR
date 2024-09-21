@@ -7,6 +7,7 @@ import XLSX from 'xlsx';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { PRODI } from "../utils/constants.js";
 
 
 export const getAllOrangtua = async (req, res) => {
@@ -90,7 +91,6 @@ export const getAllOrangtua = async (req, res) => {
 
         const totalOrangtuas = await Orangtua.countDocuments(queryObject);
         const numOfPages = Math.ceil(totalOrangtuas / limit);
-        console.log(orangtuas);
 
         res.status(StatusCodes.OK).json({ total: totalOrangtuas, numOfPages, currentPage: page, data: orangtuasWithQRCodes, qrcode: orangtuasWithQRCodes })
 
@@ -210,6 +210,75 @@ export const getExportOrtu = async (req, res) => {
     }
 };
 
+export const showStats = async (req, res) => {
+    try {
+
+        const dataOrangTua = await Orangtua.find({ isDeleted: false });
+        const totalOrangTuaRegistered = await Orangtua.countDocuments({ isRegis: true, isDeleted: false });
+        const totalOrangTuaUnregistered = await Orangtua.countDocuments({ isRegis: false, isDeleted: false });
+
+
+
+        let Registered = {};
+        let UnRegistered = {};
+        let data = []
+        let obj = {}
+        // Inisialisasi semua prodi dengan nilai 0 di Registered dan UnRegistered
+        Object.values(PRODI).forEach((prodi) => {
+            Registered[prodi] = 0;
+            UnRegistered[prodi] = 0;
+        });
+
+        // Iterasi melalui data mahasiswa yang sudah terdaftar
+        dataOrangTua.forEach((orangtua) => {
+            if (Object.values(PRODI).includes(orangtua.prodi) && orangtua.isRegis) {
+                // Tambahkan jika orangtua terdaftar pada prodi tersebut
+                Registered[orangtua.prodi] += 1;
+            } else if (Object.values(PRODI).includes(orangtua.prodi) && !orangtua.isRegis) {
+                UnRegistered[orangtua.prodi] += 1;
+            }
+        });
+
+        // console.log(UnRegistered);
+        Object.values(PRODI).forEach((prodi) => {
+            obj = {
+                name: prodi,
+                registered: Registered[prodi],
+                unregistered: UnRegistered[prodi]
+            }
+
+            data.push(obj)
+        })
+
+        const graphData = data
+
+        const defaultStats =
+        {
+            ALL: {
+                REGISTERED: totalOrangTuaRegistered || 0,
+                UNREGISTERED: totalOrangTuaUnregistered || 0,
+            },
+            // JTI: {
+            //     REGISTERED: statsByJurusanRegisteredObj.JTI || 0,
+            //     UNREGISTERED: statsByJurusanUnregisteredObj.JTI || 0
+            // },
+            // JTIN: {
+            //     REGISTERED: statsByJurusanRegisteredObj.JTIN || 0,
+            //     UNREGISTERED: statsByJurusanUnregisteredObj.JTIN || 0
+            // },
+
+            // AKTP: {
+            //     REGISTERED: statsByJurusanRegisteredObj.AKTP || 0,
+            //     UNREGISTERED: statsByJurusanUnregisteredObj.AKTP || 0,
+            // }
+        };
+
+        res.status(StatusCodes.OK).json({ defaultStats, graphData });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+};
+
 export const importDataOrtu = async (req, res) => {
     try {
 
@@ -218,14 +287,15 @@ export const importDataOrtu = async (req, res) => {
         const sheetName = workbook.SheetNames[0];
         const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-        // console.log(data);
-        // return
-
+        let cleanData = {}
         data.forEach(async (item) => {
+            let prodi = item.Program_Studi.replace("-", "").replace(/\s+/g, " ").trim().toUpperCase();
+
+
             const orangtua = new OrangtuaModel(
                 {
                     name: item.Nama,
-                    prodi: item.Program_Studi,
+                    prodi: prodi,
                     noKursi: item.No_Kursi
                 }
             );
@@ -339,7 +409,6 @@ export const exportPdfDataOrtu = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
 
         res.status(500).json({ message: 'Error generating PDF', error: error.message });
     }

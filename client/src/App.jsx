@@ -39,7 +39,7 @@ import { action as requesetResetPasswordSetting } from "./pages/settings/UserSet
 // loader
 
 import { loader as adminLoader } from "./pages/Admin";
-import { loader as berandaLoader } from "./pages/Beranda";
+// import { loader as berandaLoader } from "./pages/Beranda";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
 
 import { loader as allMahasiswaLoader } from "./pages/mahasiswa/Mahasiswa";
@@ -88,7 +88,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Beranda />,
-            loader: berandaLoader,
+            // loader: berandaLoader,
           },
           {
             path: "mahasiswa",

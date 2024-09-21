@@ -6,6 +6,8 @@ import XLSX from 'xlsx';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { PRODI } from '../utils/constants.js';
+import { register } from 'module';
 
 export const getAllMahasiswas = async (req, res) => {
     const { search, jurusan, prodi, isRegis, sort } = req.query;
@@ -155,16 +157,18 @@ export const deleteMahasiswa = async (req, res) => {
 export const showStats = async (req, res) => {
     try {
 
-        const totalMahasiswaUnregistered = await Mahasiswa.countDocuments({ isRegis: false, isDeleted: false });
+        const dataMahasiswa = await Mahasiswa.find({ isDeleted: false });
+        const dataMahasiswaUnregistered = await Mahasiswa.find({ isRegis: false, isDeleted: false });
         const totalMahasiswaRegistered = await Mahasiswa.countDocuments({ isRegis: true, isDeleted: false });
+        const totalMahasiswaUnregistered = await Mahasiswa.countDocuments({ isRegis: false, isDeleted: false });
 
         // Menghitung statistik berdasarkan jurusan
-        const statsByJurusanUnregistered = await Mahasiswa.aggregate([
-            { $match: { isRegis: false, isDeleted: false } },
-            { $group: { _id: '$jurusan', count: { $sum: 1 } } },
-        ]);
         const statsByJurusanRegistered = await Mahasiswa.aggregate([
             { $match: { isRegis: true, isDeleted: false } },
+            { $group: { _id: '$jurusan', count: { $sum: 1 } } },
+        ]);
+        const statsByJurusanUnregistered = await Mahasiswa.aggregate([
+            { $match: { isRegis: false, isDeleted: false } },
             { $group: { _id: '$jurusan', count: { $sum: 1 } } },
         ]);
 
@@ -180,19 +184,75 @@ export const showStats = async (req, res) => {
             return acc;
         }, {});
 
+
+        let Registered = {};
+        let UnRegistered = {};
+        let data = []
+        let obj = {}
+        // Inisialisasi semua prodi dengan nilai 0 di Registered dan UnRegistered
+        Object.values(PRODI).forEach((prodi) => {
+            Registered[prodi] = 0;
+            UnRegistered[prodi] = 0;
+        });
+
+        // Iterasi melalui data mahasiswa yang sudah terdaftar
+        dataMahasiswa.forEach((mahasiswa) => {
+            if (Object.values(PRODI).includes(mahasiswa.prodi) && mahasiswa.isRegis) {
+                // Tambahkan jika mahasiswa terdaftar pada prodi tersebut
+                Registered[mahasiswa.prodi] += 1;
+                
+            } else if (Object.values(PRODI).includes(mahasiswa.prodi) && !mahasiswa.isRegis) {
+                UnRegistered[mahasiswa.prodi] += 1;
+            }
+        });
+        // console.log(Registered);
+        
+
+        Object.values(PRODI).forEach((prodi) => {
+            // console.log(Registered[prodi]);
+            
+            obj = {
+                name: prodi,
+                registered: Registered[prodi],
+                unregistered: UnRegistered[prodi]
+            }
+            data.push(obj)
+        })
+
+        // console.log("Registered:", Registered);
+        // console.log("UnRegistered:", UnRegistered);
+        // console.log("data:", data);
+
+
+        const graphData = data
+        // const graphData = {
+        //     Registered,
+        //     UnRegistered
+        // }
+
         // Membuat objek defaultStats dengan total seluruh mahasiswa dan statistik berdasarkan jurusan
-        const defaultStats = {
-            ALLUNREGISTERED: totalMahasiswaUnregistered,
-            ALLREGISTERED: totalMahasiswaRegistered,
-            UNJTI: statsByJurusanUnregisteredObj.JTI || 0,
-            UNJTIN: statsByJurusanUnregisteredObj.JTIN || 0,
-            UNAKTP: statsByJurusanUnregisteredObj.AKTP || 0,
-            JTI: statsByJurusanRegisteredObj.JTI || 0,
-            JTIN: statsByJurusanRegisteredObj.JTIN || 0,
-            AKTP: statsByJurusanRegisteredObj.AKTP || 0,
+        const defaultStats =
+        {
+            ALL: {
+                REGISTERED: totalMahasiswaRegistered || 0,
+                UNREGISTERED: totalMahasiswaUnregistered || 0,
+            },
+            JTI: {
+                REGISTERED: statsByJurusanRegisteredObj.JTI || 0,
+                UNREGISTERED: statsByJurusanUnregisteredObj.JTI || 0
+            },
+            JTIN: {
+                REGISTERED: statsByJurusanRegisteredObj.JTIN || 0,
+                UNREGISTERED: statsByJurusanUnregisteredObj.JTIN || 0
+            },
+
+            AKTP: {
+                REGISTERED: statsByJurusanRegisteredObj.AKTP || 0,
+                UNREGISTERED: statsByJurusanUnregisteredObj.AKTP || 0,
+            }
         };
 
-        res.status(StatusCodes.OK).json({ defaultStats });
+        res.status(StatusCodes.OK).json({ defaultStats, graphData });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }

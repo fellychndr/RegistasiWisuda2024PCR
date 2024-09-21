@@ -9,21 +9,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Wrapper from "../assets/wrappers/StatItem";
-import { PRODII } from "../../../utils/constants";
 
-const StackChart = () => {
-  let data = [];
-  const dataA = () => {
-    PRODII.map((prodi) => {
-      data.push({
-        name: prodi.name,
-        register : prodi.register,
-        unregister : prodi.unregister
-      });
-    });
-  };
+const StackChart = ({data}) => {
 
-  dataA();
   return (
     <>
       <Wrapper>
@@ -44,8 +32,8 @@ const StackChart = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="register" stackId="a" fill="#82ca9d" />
-          <Bar dataKey="unregister" stackId="a" fill="#8884d8" />
+          <Bar dataKey="unregistered" name="Belum Registrasi" stackId="a" fill="#ea7777" />
+          <Bar dataKey="registered" name="Sudah Registrasi" stackId="a" fill="#41bc82" />
         </BarChart>
         </ResponsiveContainer>
       </Wrapper>

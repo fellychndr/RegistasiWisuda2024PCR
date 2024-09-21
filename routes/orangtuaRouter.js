@@ -13,7 +13,7 @@ import {
     exportPdfDataOrtu,
     updateOrangtuaRegister,
     updateOrangtuaKonsumsi,
-    // showStats
+    showStats
 } from '../controllers/orangtuaController.js';
 import upload from '../middleware/multerMiddleware.js';
 // import { validateJobInput, validateIdParam } from '../middleware/validationMiddleware.js';
@@ -21,7 +21,7 @@ import upload from '../middleware/multerMiddleware.js';
 
 
 router.route('/').get(getAllOrangtua).post(createOrangtua);
-// router.route('/stats').get(showStats);
+router.route('/stats').get(showStats);
 router.route('/export').get(exportPdfDataOrtu);
 router.route('/import').post(upload.single('file'), importDataOrtu);
 router.route('/:id')
