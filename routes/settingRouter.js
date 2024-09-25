@@ -40,10 +40,10 @@ router.route('/:id')
     .patch(authorizedPermissionsSettings('superadmin'),updateSetting)
     .delete(authorizedPermissionsSettings('superadmin'),deleteSetting);
 
-// router.route('/:id')
-//     .get(getMeja)
-//     .patch(updateMeja)
-//     .delete(deleteMeja);
+router.route('/meja/:id')
+    .get(getMeja)
+    .patch(updateMeja)
+    .delete(deleteMeja);
 
 // router.route('/:id')
 //     .get(getJurusanProdi)

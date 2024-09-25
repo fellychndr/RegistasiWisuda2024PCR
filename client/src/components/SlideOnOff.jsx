@@ -12,8 +12,6 @@ const ToggleButton = ({ id, featureName, isEnabled }) => {
 
     try {
       await customFetch.patch(`/settings/${id}`, { isEnabled: newIsOn });
-
-      // Update setting in the global context
       updateSetting(featureName, newIsOn);
     } catch (error) {
       console.log("Error updating setting:", error);

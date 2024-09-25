@@ -53,7 +53,7 @@ export const createMeja = async (req, res) => {
 
 export const getMeja = async (req, res) => {
     try {
-        const meja = await Meja.findOne({ _id: req.params.id });
+        const meja = await Meja.findById({ _id: req.params.id });
         res.status(StatusCodes.OK).json({ meja });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
@@ -61,9 +61,8 @@ export const getMeja = async (req, res) => {
 }
 
 export const updateMeja = async (req, res) => {
-    const { jurusan, prodi } = req.body
     try {
-        const meja = await Meja.findByIdAndUpdate(req.params.id, { jurusan: jurusan, prodi: prodi, updatedBy: req.user.userId }, {
+        const meja = await Meja.findByIdAndUpdate(req.params.id, { name: req.body.name, updatedBy: req.user.userId }, {
             new: true,
         });
         res.status(StatusCodes.OK).json({ meja });
@@ -75,9 +74,7 @@ export const updateMeja = async (req, res) => {
 export const deleteMeja = async (req, res) => {
     try {
         const { id } = req.params
-        const meja = await Meja.findByIdAndUpdate(id, { isDeleted: true, deletedBy: req.user.userId }, {
-            new: true,
-        })
+        const meja = await Meja.findByIdAndDelete(id)
         res.status(StatusCodes.OK).json({ msg: 'Meja deleted', meja })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });

@@ -1,58 +1,79 @@
 import Wrapper from "../../assets/wrappers/FormPage";
-// import { Form } from "react-router-dom";
-// import { FormRow } from "../../components";
 import DataTable from "react-data-table-component";
 import TabelContainer from "../../assets/wrappers/Tabel";
 import { useEffect, useState } from "react";
 import { getColumnsActivationFeatures } from "../../utils/columns";
 import { checkDefaultTheme } from "../../components/Table";
-import { getAllSettings } from "../../service/Settings.Service";
+import { createSetting, getAllSettings } from "../../service/Settings.Service";
 import { toast } from "react-toastify";
+import { FormRow } from "../../components";
+import { Form } from "react-router-dom";
 
 const ActivationFeatures = () => {
   const [setting, setSetting] = useState([]);
-
   const columns = getColumnsActivationFeatures();
 
+  const fetchSetting = async () => {
+    let featureNames = {};
+    try {
+      const data = await getAllSettings();
+      setSetting(data);
+      data.data.map((setting) => {
+        featureNames[setting.featureName] = setting.isEnabled;
+      });
+    } catch (error) {
+      toast.error("Gagal memuat data setting.");
+    }
+  };
+
   useEffect(() => {
-    const fetchSetting = async () => {
-      let featureNames = {};
-      try {
-        const data = await getAllSettings();
-        setSetting(data);
-        data.data.map((setting) => {
-          featureNames[setting.featureName] = setting.isEnabled;
-        });
-        // localStorage.setItem("featureNames", JSON.stringify(featureNames));
-      } catch (error) {
-        toast.error("Gagal memuat data setting.");
-      }
-    };
-    fetchSetting();
+    fetchSetting(); 
   }, []);
 
+  const tambahFeature = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const fiturValue = formData.get("fitur");
+    const data = { featureName: fiturValue };
+    console.log(data);
+
+    try {
+      await createSetting(data);
+      toast.success("Fitur berhasil ditambahkan!");
+      e.target.reset();
+      fetchSetting(); 
+    } catch (error) {
+      toast.error("Gagal menambahkan feature.");
+    }
+  };
   return (
     <Wrapper>
-      {/* <Form method="post" className="form" onSubmit={tambahMeja}> */}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h4 className="form-title">Feature Setting</h4>
-      </div>
+      <Form method="post" className="form" onSubmit={tambahFeature}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h4 className="form-title">Fitur</h4>
+        </div>
 
-      <div>
-        <TabelContainer>
-          <DataTable
-            columns={columns}
-            data={setting.data}
-            title={"Semua Aktivasi Fitur"}
-            pagination
-            paginationServer
-            fixedHeader
-            theme={checkDefaultTheme()}
-            highlightOnHover
-          />
-        </TabelContainer>
-      </div>
-      {/* </Form> */}
+        <div className="form-center">
+          <FormRow type="text" labelText="Fitur" name="fitur" />
+          <button type="submit" className="btn btn-block form-btn">
+            Submit
+          </button>
+        </div>
+        <div>
+          <TabelContainer>
+            <DataTable
+              columns={columns}
+              data={setting.data}
+              title={"Semua Aktivasi Fitur"}
+              pagination
+              paginationServer
+              fixedHeader
+              theme={checkDefaultTheme()}
+              highlightOnHover
+            />
+          </TabelContainer>
+        </div>
+      </Form>
     </Wrapper>
   );
 };

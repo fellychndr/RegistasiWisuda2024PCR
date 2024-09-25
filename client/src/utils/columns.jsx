@@ -6,6 +6,8 @@ import { Registered, Confirm } from "../components";
 import Konsumsied from "../components/Konsumsied";
 import ToggleButton from "../components/SlideOnOff";
 import QRCodeCell from "../components/QRcodeCell";
+import { deleteMeja } from "../service/Meja.service";
+import { toast } from "react-toastify";
 
 export const getMahasiswaColumns = (navigate) => [
   {
@@ -217,7 +219,7 @@ export const getOrangtuaColumns = (navigate) => [
   },
 ];
 
-export const getColumnsSettings = () => [
+export const getColumnsMejas = (setMejaValue, setIsEditing, setEditId,fetchMeja) => [
   {
     name: "No",
     selector: (row) => row.number,
@@ -238,15 +240,29 @@ export const getColumnsSettings = () => [
     cell: (row) => (
       <div>
         <button
+          type="button"
           className="btn warning-btn"
           style={{ marginRight: "10px" }}
-          // onClick={() => navigate(`../orangtua/edit-orangtua/${row._id}`)}
+          onClick={() => {
+            setMejaValue(row.name);
+            setIsEditing(true);
+            setEditId(row._id);
+          }}
         >
           Edit
         </button>
         <button
+          type="button"
           className="btn danger-btn"
-          // onClick={() => Confirm(row._id, navigate)}
+          onClick={async () => {
+            try {
+              await deleteMeja(row._id); // Memanggil fungsi delete
+              toast.success("Meja berhasil dihapus!");
+              fetchMeja(); // Refresh data setelah penghapusan
+            } catch (error) {
+              toast.error("Gagal menghapus meja.");
+            }
+          }}
         >
           Hapus
         </button>
