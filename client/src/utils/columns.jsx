@@ -102,7 +102,7 @@ export const getMahasiswaColumns = (navigate) => [
         </button>
         <button
           className="btn danger-btn"
-          onClick={() => Confirm(row._id, navigate)}
+          onClick={() => Confirm(row._id, navigate, "mahasiswa")}
         >
           Hapus
         </button>
@@ -210,7 +210,7 @@ export const getOrangtuaColumns = (navigate) => [
         </button>
         <button
           className="btn danger-btn"
-          onClick={() => Confirm(row._id, navigate)}
+          onClick={() => Confirm(row._id, navigate, "orangtua")}
         >
           Hapus
         </button>
@@ -219,7 +219,12 @@ export const getOrangtuaColumns = (navigate) => [
   },
 ];
 
-export const getColumnsMejas = (setMejaValue, setIsEditing, setEditId,fetchMeja) => [
+export const getColumnsMejas = (
+  setMejaValue,
+  setIsEditing,
+  setEditId,
+  fetchMeja
+) => [
   {
     name: "No",
     selector: (row) => row.number,
