@@ -7,11 +7,12 @@ import { checkDefaultTheme } from "../../components/Table";
 import { createSetting, getAllSettings } from "../../service/Settings.Service";
 import { toast } from "react-toastify";
 import { FormRow } from "../../components";
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 
 const ActivationFeatures = () => {
   const [setting, setSetting] = useState([]);
-  const columns = getColumnsActivationFeatures();
+  const navigate = useNavigate();
+  const columns = getColumnsActivationFeatures(navigate);
 
   const fetchSetting = async () => {
     let featureNames = {};
@@ -27,7 +28,7 @@ const ActivationFeatures = () => {
   };
 
   useEffect(() => {
-    fetchSetting(); 
+    fetchSetting();
   }, []);
 
   const tambahFeature = async (e) => {
@@ -41,7 +42,7 @@ const ActivationFeatures = () => {
       await createSetting(data);
       toast.success("Fitur berhasil ditambahkan!");
       e.target.reset();
-      fetchSetting(); 
+      fetchSetting();
     } catch (error) {
       toast.error("Gagal menambahkan feature.");
     }
@@ -59,21 +60,21 @@ const ActivationFeatures = () => {
             Submit
           </button>
         </div>
-        <div>
-          <TabelContainer>
-            <DataTable
-              columns={columns}
-              data={setting.data}
-              title={"Semua Aktivasi Fitur"}
-              pagination
-              paginationServer
-              fixedHeader
-              theme={checkDefaultTheme()}
-              highlightOnHover
-            />
-          </TabelContainer>
-        </div>
       </Form>
+      <div>
+        <TabelContainer>
+          <DataTable
+            columns={columns}
+            data={setting.data}
+            title={"Semua Aktivasi Fitur"}
+            pagination
+            paginationServer
+            fixedHeader
+            theme={checkDefaultTheme()}
+            highlightOnHover
+          />
+        </TabelContainer>
+      </div>
     </Wrapper>
   );
 };

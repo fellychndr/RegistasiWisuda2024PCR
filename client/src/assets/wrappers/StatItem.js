@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Wrapper = styled.article`
   padding: 2rem;
@@ -7,7 +7,7 @@ const Wrapper = styled.article`
   border-radius: var(--border-radius);
   position: relative;
   transition: background-color 0.3s ease;
-  margin-top: 0.5;
+  margin-top: 1rem;
 
   header {
     display: flex;
@@ -44,12 +44,12 @@ const Wrapper = styled.article`
     }
   }
   .detail {
-    position: absolute; 
+    position: absolute;
     bottom: 1rem;
-    left: 50%; 
-    transform: translateX(-50%); 
+    left: 50%;
+    transform: translateX(-50%);
     margin-top: 1rem;
-    padding: 0.5rem 1rem; 
+    padding: 0.5rem 1rem;
     background-color: ${(props) => props.color};
     color: #fff;
     border: none;
@@ -59,15 +59,14 @@ const Wrapper = styled.article`
     text-align: center;
     transition: opacity 0.3s ease, transform 0.2s ease;
 
-
     opacity: 0;
     visibility: hidden;
-    
+
     &:hover {
       background-color: ${(props) => props.bcg};
       color: ${(props) => props.color};
-      opacity: 1; 
-      visibility: visible; 
+      opacity: 1;
+      visibility: visible;
     }
 
     &:focus {
@@ -79,7 +78,7 @@ const Wrapper = styled.article`
     opacity: 1;
     visibility: visible;
   }
-  
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.1); /* Gelapkan latar belakang */
   }

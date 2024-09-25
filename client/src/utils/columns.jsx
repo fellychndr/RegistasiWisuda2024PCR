@@ -276,7 +276,7 @@ export const getColumnsMejas = (
   },
 ];
 
-export const getColumnsActivationFeatures = () => [
+export const getColumnsActivationFeatures = (navigate) => [
   {
     name: "No",
     selector: (row) => row.number,
@@ -296,6 +296,26 @@ export const getColumnsActivationFeatures = () => [
           featureName={row.featureName}
           isEnabled={row.isEnabled}
         />
+      </div>
+    ),
+  },
+  {
+    name: "Action",
+    cell: (row) => (
+      <div>
+        <button
+          className="btn warning-btn"
+          style={{ marginRight: "10px" }}
+          onClick={() => navigate(`../settings/edit-settings/${row._id}`)}
+        >
+          Edit
+        </button>
+        <button
+          className="btn danger-btn"
+          onClick={() => Confirm(row._id, navigate, "settings")}
+        >
+          Hapus
+        </button>
       </div>
     ),
   },

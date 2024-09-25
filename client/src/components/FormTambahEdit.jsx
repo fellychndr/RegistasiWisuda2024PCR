@@ -111,26 +111,43 @@ const FormTambahEdit = ({ title, data, action, urlLink }) => {
           ) : (
             ""
           )}
-          <FormRow
-            labelText="Nama"
-            type="text"
-            name="name"
-            defaultValue={data?.name || ""}
-          />
+          {title == "Data Setting" ? (
+            <FormRow
+              labelText="Nama Feature"
+              type="text"
+              name="featureName"
+              defaultValue={data?.featureName || ""}
+            />
+          ) : (
+            ""
+          )}
+          {title == "Data Mahasiswa" || title == "Data Orangtua" ? (
+            <>
+              <FormRow
+                labelText="Nama"
+                type="text"
+                name="name"
+                defaultValue={data?.name || ""}
+              />
 
-          <FormRowSelect
-            labelText="Prodi"
-            name="prodi"
-            defaultValue={data?.prodi || ""}
-            list={Object.values(PRODI)}
-          />
+              <FormRowSelect
+                labelText="Prodi"
+                name="prodi"
+                defaultValue={data?.prodi || ""}
+                list={Object.values(PRODI)}
+              />
 
-          <FormRow
-            type="text"
-            labelText="No Kursi"
-            name="noKursi"
-            defaultValue={data?.noKursi || ""}
-          />
+              <FormRow
+                type="text"
+                labelText="No Kursi"
+                name="noKursi"
+                defaultValue={data?.noKursi || ""}
+              />
+            </>
+          ) : (
+            ""
+          )}
+
           <SubmitBtn formBtn />
         </div>
       </Form>

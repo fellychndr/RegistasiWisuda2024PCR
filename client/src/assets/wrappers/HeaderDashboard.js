@@ -2,12 +2,11 @@ import styled from "styled-components";
 
 const Wrapper = styled.section`
   width: 100%;
-  background: white;
+  background: var(--background-secondary-color);
   padding: 1.5rem 0 0 2rem;
   margin-bottom: 0.5rem;
   border-radius: 10px;
   h5 {
-    color: #353d4c;
     font-weight: 700;
   }
   .tabs-container {
@@ -66,7 +65,7 @@ const Wrapper = styled.section`
   @media (max-width: 768px) {
     padding: 0;
     h5 {
-      display: none; /* Hide the "Dashboard" text */
+      display: none;
     }
     .tabs-container {
       padding-top: 0;
@@ -80,6 +79,7 @@ const Wrapper = styled.section`
       height: 100%;
       width: 100%;
       border-radius: 10px;
+      margin-right: 0;
       z-index: 1;
     }
     .tab.active {
