@@ -20,7 +20,7 @@ const Admin = () => {
   const { users } = useLoaderData();
   const stats = [
     {
-      title: "Seluruh Mahasiswa Unregistered",
+      title: "Seluruh Users",
       count: users || 0,
       icon: <FaSuitcaseRolling />,
       color: "#e9b949",

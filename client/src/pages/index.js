@@ -23,3 +23,5 @@ export { default as RequestResetPassword } from "./auth/RequestResetPassword";
 export { default as ResetPassword } from "./auth/ResetPassword";
 
 export { default as EditSettings } from "./settings/EditSettings";
+export { default as ShowUser } from "./ShowUser";
+export { default as EditUser } from "./EditUser";

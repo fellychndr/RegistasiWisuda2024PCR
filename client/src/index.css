@@ -456,6 +456,10 @@ button:disabled {
   #html5qr-code-full-region {
     width: 600px;
   }
+  .label{
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* @media (min-width: 640px) {
@@ -528,4 +532,10 @@ button:disabled {
   transform: translateX(0);
 }
 
-
+.label{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0.5rem 1rem;
+  border-radius: 5px;
+}

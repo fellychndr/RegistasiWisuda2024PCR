@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 import FormRow from "./FormRow";
 import FormRowSelect from "./FormRowSelect";
 import SubmitBtn from "./SubmitBtn";
-import { JURUSAN, PRODI } from "../../../utils/constants";
+import { JURUSAN, PRODI, ROLE } from "../../../utils/constants";
 import { LuImport } from "react-icons/lu";
 import Modal from "./Modal";
 import { useState } from "react";
@@ -118,6 +118,25 @@ const FormTambahEdit = ({ title, data, action, urlLink }) => {
               name="featureName"
               defaultValue={data?.featureName || ""}
             />
+          ) : (
+            ""
+          )}
+          {title == "Data User" ? (
+            <>
+              <FormRow
+                labelText="Nama User"
+                type="text"
+                name="name"
+                defaultValue={data?.name || ""}
+                disabled
+              />
+              <FormRowSelect
+                labelText="Role"
+                name="role"
+                defaultValue={data?.role || ""}
+                list={Object.values(ROLE)}
+              />
+            </>
           ) : (
             ""
           )}

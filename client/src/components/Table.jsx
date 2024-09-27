@@ -2,7 +2,11 @@ import DataTable from "react-data-table-component";
 import { useLocation, useNavigate } from "react-router-dom";
 import TabelContainer from "../assets/wrappers/Tabel";
 import { useDashboardContext } from "../pages/DashboardLayout";
-import { getMahasiswaColumns, getOrangtuaColumns } from "../utils/columns";
+import {
+  getMahasiswaColumns,
+  getOrangtuaColumns,
+  getColumnsUsers,
+} from "../utils/columns";
 import { BiExport } from "react-icons/bi";
 import customFetch from "../utils/customFetch";
 
@@ -27,6 +31,9 @@ const Table = ({ titleTable, context }) => {
   } else if (pathname.includes("/orangtua")) {
     columns = getOrangtuaColumns(navigate);
     linkUrl = "orangtua";
+  } else if (pathname.includes("/admin")) {
+    columns = getColumnsUsers(navigate);
+    linkUrl = "admin";
   }
 
   const handlePageChange = (page) => {

@@ -320,3 +320,40 @@ export const getColumnsActivationFeatures = (navigate) => [
     ),
   },
 ];
+
+export const getColumnsUsers = (navigate) => [
+  {
+    name: "No",
+    selector: (row) => row.number,
+    sortable: true,
+  },
+  {
+    name: "Nama",
+    selector: (row) => row.name,
+    sortable: true,
+  },
+  {
+    name: "Email",
+    selector: (row) => row.email,
+    sortable: true,
+  },
+  {
+    name: "Role",
+    selector: (row) => row.role,
+    sortable: true,
+  },
+  {
+    name: "Action",
+    cell: (row) => (
+      <div>
+        <button
+          className="btn warning-btn"
+          style={{ marginRight: "10px" }}
+          onClick={() => navigate(`../edit-user/${row._id}`)}
+        >
+          Edit
+        </button>
+      </div>
+    ),
+  },
+];

@@ -20,6 +20,8 @@ import {
   RequestResetPassword,
   ResetPassword,
   EditSettings,
+  ShowUser,
+  EditUser,
 } from "./pages";
 
 import { action as registerAction } from "./pages/auth/Register";
@@ -40,6 +42,7 @@ import { action as requesetResetPasswordSetting } from "./pages/settings/UserSet
 
 import { action as editSettingsAction } from "./pages/settings/EditSettings";
 
+import { action as editUserAction } from "./pages/EditUser";
 // loader
 
 import { loader as adminLoader } from "./pages/Admin";
@@ -53,6 +56,8 @@ import { loader as allOrangtuaLoader } from "./pages/orangtua/OrangTua";
 import { loader as editOrangTua } from "./pages/orangtua/EditOrangTua";
 
 import { loader as editSettings } from "./pages/settings/EditSettings";
+import { loader as showUserLoader } from "./pages/ShowUser";
+import { loader as editUserLoader } from "./pages/EditUser";
 
 export const checkDefaultTheme = () => {
   const isDarkTheme = localStorage.getItem("darkTheme") === "true";
@@ -165,15 +170,15 @@ const router = createBrowserRouter([
               },
               {
                 path: "all-users",
-                // element: <EditOrangTua />,
-                // loader: editOrangTua,
+                element: <ShowUser />,
+                loader: showUserLoader,
                 // action: editOrangTuaAction,
               },
               {
                 path: "edit-user/:id",
-                // element: <EditOrangTua />,
-                // loader: editOrangTua,
-                // action: editOrangTuaAction,
+                element: <EditUser />,
+                loader: editUserLoader,
+                action: editUserAction,
               },
             ],
           },
