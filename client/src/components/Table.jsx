@@ -79,9 +79,14 @@ const Table = ({ titleTable, context }) => {
         theme={checkDefaultTheme()}
         highlightOnHover
         actions={
-          <button type="button" className="btn" onClick={handleExportPDF}>
-            <BiExport size={15} style={{ marginRight: "0.3rem" }} /> Export PDF
-          </button>
+          linkUrl == "admin" ? (
+            ""
+          ) : (
+            <button type="button" className="btn" onClick={handleExportPDF}>
+              <BiExport size={15} style={{ marginRight: "0.3rem" }} /> Export
+              PDF
+            </button>
+          )
         }
       />
     </TabelContainer>
