@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 // import { io } from "socket.io-client";
 // import { socketUrl } from "../config/config";
 import { pusher } from "../utils/pusherUtils";
+import Wrapper from "../assets/wrappers/Display";
+import bgDisplay from "../assets/images/bgDisplay.png";
+import VectorLeft from "../assets/images/VectorLeft.png";
+import VectorRight from "../assets/images/VectorRight.png";
 
 // const socket = io(socketUrl, {
 //   reconnection: true,
@@ -19,13 +23,12 @@ const Display = () => {
   const [dataScan, setDataScan] = useState(null);
   const [registrasionGate, setRegistrasionGate] = useState(null);
 
-  
   useEffect(() => {
     const registrastionGateId = localStorage.getItem("tableId");
     if (registrastionGateId) {
       setRegistrasionGate(registrastionGateId);
     }
-    
+
     const channel = pusher.subscribe(registrastionGateId);
     channel.bind("my-event", (data) => {
       setDataScan(data);
@@ -55,18 +58,35 @@ const Display = () => {
   }, [registrasionGate]);
 
   // console.log(dataScan);
-
+  const formatName = (name) => {
+    const words = name.split(" ");
+    if (words.length > 2) {
+      return (
+        <>
+          {words.slice(0, 2).join(" ")}
+          <br />
+          {words.slice(2).join(" ")}
+        </>
+      );
+    }
+    return name;
+  };
   return (
-    <div style={{ textAlign: "center" }}>
-      {/* <h1>Display </h1> */}
-      <br />
-      {showDisplay && dataScan && (
-        <div>
-          <h1>Selamat Datang {dataScan.message}</h1>
-          <h1>{dataScan.data.name}</h1>
+    <Wrapper>
+      <img src={bgDisplay} alt="background display" className="image" />
+      <div className="overlay-text">
+        <h2>congraduation</h2>
+        <div className="container">
+          <img src={VectorLeft} className="left-vector" alt="Left Vector" />
+          <h1>Selamat Datang</h1>
+          <img src={VectorRight} className="right-vector" alt="Right Vector" />
         </div>
-      )}
-    </div>
+        {showDisplay && dataScan && (
+          <p className="displayName">{formatName(dataScan.data.name)}</p>
+        )}
+        {/* <p className="displayName">Dharma Putra Prataam</p> */}
+      </div>
+    </Wrapper>
   );
 };
 
