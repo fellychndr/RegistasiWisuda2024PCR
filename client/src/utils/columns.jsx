@@ -135,8 +135,8 @@ export const getOrangtuaColumns = (navigate) => [
   },
   {
     name: "QR",
-    cell: (row) => <img src={row.qr_code} width={50} height={50} />,
-    sortable: true,
+    cell: (row) => <QRCodeCell row={row} />,
+    // sortable: true,
     width: "5.5rem",
   },
   {
