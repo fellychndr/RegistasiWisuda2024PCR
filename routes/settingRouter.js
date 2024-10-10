@@ -13,6 +13,7 @@ import {
   getSetting,
   updateSetting,
   deleteSetting,
+  sendEmail
 } from "../controllers/settingsController.js";
 
 import {
@@ -35,6 +36,9 @@ router
   .route("/meja")
   .get(getAllMeja)
   .post(authorizedPermissionsSettings("superadmin"), createMeja);
+router
+  .route("/kirimEmail")
+  .get(sendEmail);
 
 router
   .route("/:id")

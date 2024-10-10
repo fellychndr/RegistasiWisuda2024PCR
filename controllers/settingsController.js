@@ -149,3 +149,7 @@ export const openTakeKonsumsi = async (req, res) => {
     }
 }
 
+
+export const sendEmail = async (req, res) => {
+    
+}
